@@ -1,0 +1,192 @@
+بدي ياك تسوي باقي المزايه وي تبحث عن مشاريع مشابهت ان مزايه منشوره مشابهت مصدر مفتوح وي تضيفها وي تحسنها بدي ياك تبحث وي تلاقي الفضل عل. GitHubبدي تحط الفضل وي كمان تحسنه اكثر بدي ياك تحسن كل المزايه حتا اصغرها هاذه تقريبآ كل المزليه حسنها كله وي اجمعها وي حطه في Mahmoudai.  
+
+1. واجهة برنامج Windows حقيقية — WinUI 3، ليست موقعًا.
+
+
+2. شخصية متحركة تتغير حسب الحالة: يستمع، يفكر، يتكلم، يعمل، يحذر.
+
+
+3. صوت عربي وإنجليزي — إدخال صوتي + تحويل كلام لنص + نطق الرد.
+
+
+4. محادثة ذكية مع فهم السياق والمهام.
+
+
+5. التحكم بنظام Windows وتشغيل البرامج والأوامر المسموحة.
+
+
+6. Mouse & Keyboard Automation مع نظام صلاحيات.
+
+
+7. Touch / Pen Integration للشاشات اللمسية.
+
+
+8. تعدد المهام وتشغيل أكثر من مهمة بالتوازي.
+
+
+9. رؤية الشاشة وفهم النوافذ والمحتوى.
+
+
+10. Gaming Assistant للمساعدة والتحليل والأداء، بدون غش أو تجاوز Anti-Cheat.
+
+
+11. Task Planner يقسم المهمة الكبيرة إلى خطوات.
+
+
+12. ذاكرة دائمة تحفظ المشروع، التفضيلات، المهام والنتائج.
+
+
+13. تعلم من الخبرة بشكل واقعي: يتذكر الاستراتيجيات الناجحة ويحسن اختياراته.
+
+
+14. Reasoning Orchestrator للتخطيط والتحليل واختيار الأدوات والوكلاء.
+
+
+15. Security System مع تشفير وصلاحيات ومراقبة العمليات الحساسة.
+
+
+16. Files & Logs Management لإدارة الملفات والتقارير والسجلات.
+
+
+17. Adaptive UI تتغير حسب الوضع والمهمة.
+
+
+18. Modular Architecture كل جزء مستقل ويمكن تطويره بدون تكسير باقي المشروع.
+
+
+19. Profile Manager ملفات شخصية وإعدادات وتفضيلات لكل مستخدم.
+
+
+20. Guarded Autonomous Runtime ينفذ مهام طويلة بشكل شبه مستقل لكن تحت قيود وصلاحيات.
+
+
+
+وفوق هذه الـ20، عندنا مزايا موسعة مهمة جدًا:
+
+فريق Agents كامل بدل Agent واحد:
+
+Manager
+
+Planner
+
+Research
+
+Coding
+
+Vision
+
+Tool
+
+Memory
+
+Verifier
+
+Safety
+
+
+عمل الفريق بين الوكلاء:
+
+Sequential
+
+Parallel
+
+Handoff
+
+Manager/Worker
+
+Reviewer
+
+Consensus
+
+Human-in-the-loop
+
+
+Mission System: كل مهمة تصبح Mission لها حالة، خطوات، نتائج وArtifacts.
+
+Task Graph يربط المهام ببعض ويحدد ما يعمل بالتوازي وما ينتظر.
+
+Checkpoints لاستكمال المهمة بعد توقف أو إعادة تشغيل.
+
+Emergency Stop يوقف الأتمتة فورًا.
+
+Safe Mode عند حدوث مشكلة.
+
+Permission Broker بصلاحيات مثل:
+
+قراءة ملفات
+
+كتابة ملفات
+
+حذف
+
+Screen Capture
+
+Mouse
+
+Keyboard
+
+Microphone
+
+Network
+
+Plugins
+
+
+Dry Run لمعاينة ما سيفعله قبل التنفيذ.
+
+Mission Timeline لرؤية كل ما فعله خطوة بخطوة.
+
+Artifact Center لكل الملفات والتقارير الناتجة.
+
+Agent Team Dashboard لمراقبة الوكلاء أثناء العمل.
+
+Global Command Palette مثل Ctrl + Space.
+
+System Tray للعمل في الخلفية.
+
+Windows Notifications عند انتهاء مهمة أو طلب صلاحية.
+
+Global Hotkeys.
+
+Screen Capture + OCR + Vision Models.
+
+Workspace Isolation لكل Mission حتى لا يعبث بملفاتك الأخرى.
+
+MCP Support لإضافة أدوات وخدمات خارجية.
+
+Plugin / Skill System لتوسعة القدرات.
+
+Model Router يختار أفضل نموذج حسب المهمة.
+
+Local AI + Cloud AI.
+
+Qdrant Vector Memory للذاكرة الدلالية.
+
+SQLite لتخزين الحالة المحلية.
+
+OpenTelemetry / Logs / Metrics لمراقبة النظام.
+
+Crash Recovery واستعادة المهام.
+
+Updater وتحديثات آمنة.
+
+Installer / MSIX / Setup EXE.
+
+Code Signing للبرنامج.
+
+Resource Governor لتحديد CPU/RAM/concurrency.
+
+Offline Mode قدر الإمكان.
+
+Model Benchmark Center لاختبار النماذج.
+
+Replay لإعادة تشغيل سجل المهمة لأغراض التصحيح.
+
+Mission Templates للمهام المتكررة.
+
+Explain My Mission يشرح لك لماذا اختار هذه الخطة والأداة والوكيل.
+
+Health Monitor لكل خدمة: Healthy / Degraded / Offline.
+
+
+.
