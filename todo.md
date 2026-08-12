@@ -18,3 +18,5 @@
 - [ ] Add Windows packaging workflow, MSIX path, and reproducible release documentation.
 - [ ] Verify all supported features on Windows or document Windows-only verification gaps.
 - [ ] Publish the independent desktop repository and important release files to GitHub.
+
+- [ ] Integrate 20 Core Desktop Agent Features and Extended Multi-Agent Ecosystem (WinUI 3, Animated Persona, Voice, MCP, Permission Broker, Qdrant Memory, Mission Timeline).
