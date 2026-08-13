@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
@@ -131,7 +132,10 @@ namespace MahmoudAI.WindowsIntegration.Automation
             IntPtr pointer = IntPtr.Zero;
             try
             {
-                return null!;
+                var factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem).FullName);
+                var interop = (IGraphicsCaptureItemInterop)factory;
+                interop.CreateForWindow(hwnd, ref guid, out pointer);
+                return Marshal.GetObjectForIUnknown(pointer) as GraphicsCaptureItem ?? throw new InvalidOperationException("Failed to wrap GraphicsCaptureItem pointer.");
             }
             finally
             {

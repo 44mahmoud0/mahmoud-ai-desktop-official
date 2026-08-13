@@ -26,13 +26,25 @@ jobs:
           Write-Error "CRITICAL: MahmoudAI.sln not found!"
           exit 1
         }
-        $projects = dotnet sln MahmoudAI.sln list
-        Write-Host $projects
-        if ($projects -notmatch "MahmoudAI.Core") {
-          Write-Error "CRITICAL: MahmoudAI.Core missing from solution!"
-          exit 1
+        $projects = [string[]](dotnet sln MahmoudAI.sln list)
+        Write-Host "Projects in solution:"
+        $projects | ForEach-Object { Write-Host " - $_" }
+
+        $requiredProjects = @("MahmoudAI.Core", "MahmoudAI.WindowsIntegration", "MahmoudAI.Storage", "MahmoudAI.Security", "MahmoudAI.Mcp", "MahmoudAI.App", "MahmoudAI.Core.Tests")
+        foreach ($req in $requiredProjects) {
+          $found = $false
+          foreach ($p in $projects) {
+            if ($p -match $req) {
+              $found = $true
+              break
+            }
+          }
+          if (-not $found) {
+            Write-Error "CRITICAL: Required project '$req' is missing from MahmoudAI.sln!"
+            exit 1
+          }
         }
-        Write-Host "Preflight assertions passed successfully."
+        Write-Host "All critical project preflight assertions passed successfully."
 
     - name: Restore Dependencies
       run: dotnet restore MahmoudAI.sln
@@ -41,4 +53,11 @@ jobs:
       run: dotnet build MahmoudAI.sln --configuration Release --no-restore
 
     - name: Run Test Suite (Release)
-      run: dotnet test MahmoudAI.sln --configuration Release --no-build --verbosity normal
+      run: dotnet test MahmoudAI.sln --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx"
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-trx
+        path: '**/*.trx'

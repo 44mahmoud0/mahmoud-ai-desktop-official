@@ -45,15 +45,30 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 NativeMethods.SetForegroundWindow(hwnd);
                 Thread.Sleep(50);
 
+                if (NativeMethods.GetForegroundWindow() != hwnd || !MatchesContext(hwnd, context))
+                {
+                    return Task.FromResult(new AutomationResult(false, null, "Foreground window changed before keyboard input."));
+                }
+
                 foreach (char c in keys)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    NativeMethods.keybd_event(0, (byte)c, 0, 0);
-                    NativeMethods.keybd_event(0, (byte)c, 0x0002 /* KEYEVENTF_KEYUP */, 0);
+                    
+                    if (NativeMethods.GetForegroundWindow() != hwnd)
+                    {
+                        return Task.FromResult(new AutomationResult(false, null, "Foreground window lost during keyboard input sequence."));
+                    }
+
+                    NativeMethods.keybd_event(0, (byte)c, 0, UIntPtr.Zero);
+                    NativeMethods.keybd_event(0, (byte)c, 0x0002 /* KEYEVENTF_KEYUP */, UIntPtr.Zero);
                     Thread.Sleep(10);
                 }
 
                 return Task.FromResult(new AutomationResult(true, $"sent-chars:{keys.Length};hwnd:{hwnd.ToInt64()}"));
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -77,12 +92,24 @@ namespace MahmoudAI.WindowsIntegration.Automation
 
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 NativeMethods.SetForegroundWindow(hwnd);
                 Thread.Sleep(50);
+
+                if (NativeMethods.GetForegroundWindow() != hwnd || !MatchesContext(hwnd, context))
+                {
+                    return Task.FromResult(new AutomationResult(false, null, "Foreground window changed before pointer input."));
+                }
+
                 NativeMethods.SetCursorPos(x, y);
                 NativeMethods.mouse_event(0x0002 /* MOUSEEVENTF_LEFTDOWN */ | 0x0004 /* MOUSEEVENTF_LEFTUP */, (uint)x, (uint)y, 0, UIntPtr.Zero);
 
                 return Task.FromResult(new AutomationResult(true, $"clicked;x:{x};y:{y};hwnd:{hwnd.ToInt64()}"));
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
