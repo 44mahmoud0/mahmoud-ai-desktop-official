@@ -1,31 +1,44 @@
-name: Mahmoud AI Quality Gate
+name: MahmoudAI Quality Gate & CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
-  windows-quality-gate:
+  build-and-test:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.400'
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
 
-      - uses: microsoft/setup-msbuild@v2
+    - name: Preflight Solution and Project Assertion
+      shell: pwsh
+      run: |
+        if (!(Test-Path "MahmoudAI.sln")) {
+          Write-Error "CRITICAL: MahmoudAI.sln not found!"
+          exit 1
+        }
+        $projects = dotnet sln MahmoudAI.sln list
+        Write-Host $projects
+        if ($projects -notmatch "MahmoudAI.Core") {
+          Write-Error "CRITICAL: MahmoudAI.Core missing from solution!"
+          exit 1
+        }
+        Write-Host "Preflight assertions passed successfully."
 
-      - name: Verify everything via Quality Gate Script
-        shell: pwsh
-        run: ./eng/verify.ps1
+    - name: Restore Dependencies
+      run: dotnet restore MahmoudAI.sln
 
-      - name: Upload build diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: verification-artifacts
-          path: artifacts
+    - name: Build Solution (Release)
+      run: dotnet build MahmoudAI.sln --configuration Release --no-restore
+
+    - name: Run Test Suite (Release)
+      run: dotnet test MahmoudAI.sln --configuration Release --no-build --verbosity normal

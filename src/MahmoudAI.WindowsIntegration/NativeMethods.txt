@@ -11,3 +11,8 @@ SendInput
 GetWindowRect
 IGraphicsCaptureItemInterop
 GetDpiForWindow
+HWND
+INPUT
+KEYBDINPUT
+MOUSEINPUT
+HARDWAREINPUT
