@@ -85,6 +85,10 @@ namespace MahmoudAI.Teamwork
                     _logger.LogInformation("Handing off to agent {AgentName}", name);
                     currentContext = await agent.ExecuteAsync(currentContext, cancellationToken);
                 }
+                else
+                {
+                    throw new KeyNotFoundException($"Mandatory agent '{name}' is not registered in the AgentOrchestrator registry.");
+                }
             }
             return currentContext;
         }

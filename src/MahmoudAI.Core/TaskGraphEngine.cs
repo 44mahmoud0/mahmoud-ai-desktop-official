@@ -21,6 +21,7 @@ namespace MahmoudAI.Core.Engine
         public string Name { get; init; } = string.Empty;
         public Func<CancellationToken, Task<bool>> Action { get; init; } = _ => Task.FromResult(true);
         public List<string> Dependencies { get; init; } = new();
+        public int MaxRetries { get; init; } = 0;
         public TaskStatus Status { get; set; } = TaskStatus.Pending;
         public string? Error { get; set; }
     }
@@ -72,26 +73,45 @@ namespace MahmoudAI.Core.Engine
 
                         _ = Task.Run(async () =>
                         {
-                            try
+                            int attempts = 0;
+                            bool success = false;
+                            string? lastError = null;
+
+                            while (attempts <= task.MaxRetries && !success)
                             {
-                                task.Status = TaskStatus.Running;
-                                _logger.LogInformation("Executing task {TaskId}: {TaskName}", task.Id, task.Name);
-                                bool success = await task.Action(cancellationToken);
-                                task.Status = success ? TaskStatus.Completed : TaskStatus.Failed;
-                                lock (completed)
+                                attempts++;
+                                try
                                 {
-                                    if (success) completed.Add(task.Id);
+                                    task.Status = TaskStatus.Running;
+                                    _logger.LogInformation("Executing task {TaskId}: {TaskName} (Attempt {Attempt}/{MaxRetries})", task.Id, task.Name, attempts, task.MaxRetries + 1);
+                                    success = await task.Action(cancellationToken);
+                                    if (!success && attempts <= task.MaxRetries)
+                                    {
+                                        await Task.Delay(100 * attempts, cancellationToken);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    lastError = ex.Message;
+                                    _logger.LogWarning(ex, "Task {TaskId} attempt {Attempt} failed", task.Id, attempts);
+                                    if (attempts <= task.MaxRetries)
+                                    {
+                                        await Task.Delay(100 * attempts, cancellationToken);
+                                    }
                                 }
                             }
-                            catch (Exception ex)
+
+                            task.Status = success ? TaskStatus.Completed : TaskStatus.Failed;
+                            task.Error = lastError;
+
+                            lock (completed)
                             {
-                                task.Status = TaskStatus.Failed;
-                                task.Error = ex.Message;
-                                _logger.LogError(ex, "Task {TaskId} failed with exception", task.Id);
+                                if (success) completed.Add(task.Id);
                             }
-                            finally
+
+                            lock (running)
                             {
-                                lock (running) { running.Remove(task.Id); }
+                                running.Remove(task.Id);
                             }
                         }, cancellationToken);
                     }
@@ -99,7 +119,6 @@ namespace MahmoudAI.Core.Engine
 
                 if (!progressMade && running.Count == 0)
                 {
-                    // Deadlock or unresolvable dependencies
                     _logger.LogError("Task graph execution stalled due to unresolved dependencies or failure.");
                     return false;
                 }
