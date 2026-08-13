@@ -94,3 +94,4 @@ The project has been checked with TypeScript, Vitest, and a production build. Th
 ## Future-facing work
 
 RTL and Arabic localization remains an explicit future feature rather than a hidden partial implementation. A future direction switch should include translated copy boundaries, logical CSS verification, route-by-route visual review, and tests for mixed-direction metadata. Additional production work may include a richer media workflow, editorial scheduling, analytics dashboards, moderation, and a more granular role model.
+
