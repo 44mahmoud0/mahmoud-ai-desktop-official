@@ -10,5 +10,17 @@
     <NuGetAuditMode>all</NuGetAuditMode>
     <NuGetAuditLevel>low</NuGetAuditLevel>
     <WarningsAsErrors>$(WarningsAsErrors);NU1903;NU1904</WarningsAsErrors>
+    <DisableHasPackageType>true</DisableHasPackageType>
+    <AppxPackage>false</AppxPackage>
+    <AppxPackageEnabled>false</AppxPackageEnabled>
+    <GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
+    <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>
+    <EnableMsixTooling>false</EnableMsixTooling>
+    <ImportAppxTargets>false</ImportAppxTargets>
+    <WindowsPackageType>None</WindowsPackageType>
+    <EnableCoreMrtTooling>false</EnableCoreMrtTooling>
+    <EnablePriGenTooling>false</EnablePriGenTooling>
+    <DisableWinUIXamlCompilerTask>true</DisableWinUIXamlCompilerTask>
+    <EnableXamlCompiler>false</EnableXamlCompiler>
   </PropertyGroup>
 </Project>
