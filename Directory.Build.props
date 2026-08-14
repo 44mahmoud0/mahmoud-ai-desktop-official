@@ -12,6 +12,7 @@
     <WarningsAsErrors>$(WarningsAsErrors);NU1903;NU1904</WarningsAsErrors>
     <DisableHasPackageType>true</DisableHasPackageType>
     <AppxPackage>false</AppxPackage>
+    <AppxPackageEnabled>false</AppxPackageEnabled>
     <GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
     <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>
     <EnableMsixTooling>false</EnableMsixTooling>
@@ -19,5 +20,6 @@
     <WindowsPackageType>None</WindowsPackageType>
     <EnablePriGen>false</EnablePriGen>
     <SkipWriteAppxManifest>true</SkipWriteAppxManifest>
+    <AppxMSBuildToolsPath>$(MSBuildThisFileDirectory)</AppxMSBuildToolsPath>
   </PropertyGroup>
 </Project>
