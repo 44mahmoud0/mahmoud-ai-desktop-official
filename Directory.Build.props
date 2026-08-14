@@ -17,5 +17,7 @@
     <EnableMsixTooling>false</EnableMsixTooling>
     <ImportAppxTargets>false</ImportAppxTargets>
     <WindowsPackageType>None</WindowsPackageType>
+    <EnablePriGen>false</EnablePriGen>
+    <SkipWriteAppxManifest>true</SkipWriteAppxManifest>
   </PropertyGroup>
 </Project>
