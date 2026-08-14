@@ -118,8 +118,8 @@ jobs:
           $ns.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
           
           $content = Get-Content $file.FullName -Raw
-          $isCore = $content -match "MahmoudAI\.Core\.Tests"
-          $isWindows = $content -match "MahmoudAI\.WindowsIntegration\.Tests"
+          $isCoreTest = $content -match "MahmoudAI\.Core\.Tests"
+          $isWindowsTest = $content -match "MahmoudAI\.WindowsIntegration\.Tests"
 
           $counters = $xml.SelectNodes("//t:Counters", $ns)
           $fileTotal = 0
@@ -129,11 +129,11 @@ jobs:
             $filePassed += [int]$c.passed
           }
 
-          if ($isCore -and !$isWindows) {
+          if ($isCoreTest -and !$isWindowsTest) {
             $coreTotal += $fileTotal
             $corePassed += $filePassed
             Write-Host " -> Identified as MahmoudAI.Core.Tests: $filePassed / $fileTotal passed"
-          } elseif ($isWindows -and !$isCore) {
+          } elseif ($isWindowsTest -and !$isCoreTest) {
             $windowsTotal += $fileTotal
             $windowsPassed += $filePassed
             Write-Host " -> Identified as MahmoudAI.WindowsIntegration.Tests: $filePassed / $fileTotal passed"
