@@ -15,5 +15,7 @@
     <GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
     <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>
     <EnableMsixTooling>false</EnableMsixTooling>
+    <ImportAppxTargets>false</ImportAppxTargets>
+    <WindowsPackageType>None</WindowsPackageType>
   </PropertyGroup>
 </Project>

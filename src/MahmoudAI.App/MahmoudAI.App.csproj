@@ -16,6 +16,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="MahmoudAI.WindowsIntegration.Automation" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
