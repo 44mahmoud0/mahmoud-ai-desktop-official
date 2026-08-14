@@ -10,7 +10,11 @@
     <NuGetAuditMode>all</NuGetAuditMode>
     <NuGetAuditLevel>low</NuGetAuditLevel>
     <WarningsAsErrors>$(WarningsAsErrors);NU1903;NU1904</WarningsAsErrors>
-    <DisableWindowsSdkBuildToolsMsixTargets>true</DisableWindowsSdkBuildToolsMsixTargets>
-    <EnableWindowsSdkBuildToolsMsixTargets>false</EnableWindowsSdkBuildToolsMsixTargets>
+    <ImportWindowsSdkBuildToolsMsixTargets>false</ImportWindowsSdkBuildToolsMsixTargets>
+    <WindowsSdkBuildToolsMsixTargetsImported>true</WindowsSdkBuildToolsMsixTargetsImported>
+    <AppxPriEnabled>false</AppxPriEnabled>
+    <AppxBundle>Never</AppxBundle>
+    <AppxPackage>false</AppxPackage>
+    <GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
   </PropertyGroup>
 </Project>
