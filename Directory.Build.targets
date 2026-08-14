@@ -8,4 +8,11 @@
   <PropertyGroup Condition="'$(UseWinUI)' != 'true'">
     <WindowsAppSdkSelfContained>false</WindowsAppSdkSelfContained>
   </PropertyGroup>
+
+  <!-- Prevent missing AppxPackage assembly execution in CLI builds -->
+  <Target Name="RemovePayloadDuplicates" />
+  <Target Name="_GetPriFile" />
+  <Target Name="GetPriFiles" />
+  <Target Name="_CalculateAppxPackagePayload" />
+  <Target Name="_CompileAppxManifest" />
 </Project>
