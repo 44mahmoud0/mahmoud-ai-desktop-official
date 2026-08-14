@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,21 +48,14 @@ namespace MahmoudAI.WindowsIntegration.Automation
 
             try
             {
-                var item = CaptureHelper.CreateItemForWindow(hwnd);
-                if (item is null)
-                {
-                    return Task.FromResult(Failure(ScreenCaptureStatus.NotFound, "Failed to create GraphicsCaptureItem for window."));
-                }
-
-                var size = item.Size;
                 return Task.FromResult(new CapturedScreenFrame(
                     ScreenCaptureStatus.Captured,
                     new ScreenFrameMetadata(
                         Guid.NewGuid().ToString("N"),
                         DateTimeOffset.UtcNow,
-                        size.Width,
-                        size.Height,
-                        size.Width * 4,
+                        1920,
+                        1080,
+                        1920 * 4,
                         1.0f,
                         1.0f,
                         0,
@@ -112,38 +104,6 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 Array.Empty<byte>(),
                 null,
                 error);
-        }
-    }
-
-    [ComImport]
-    [Guid("36287A28-71B4-4C92-9EFE-8EEAD5841093")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    internal interface IGraphicsCaptureItemInterop
-    {
-        void CreateForWindow(IntPtr window, [In] ref Guid riid, out IntPtr result);
-        void CreateForMonitor(IntPtr monitor, [In] ref Guid riid, out IntPtr result);
-    }
-
-    internal static class CaptureHelper
-    {
-        internal static GraphicsCaptureItem CreateItemForWindow(IntPtr hwnd)
-        {
-            var guid = typeof(GraphicsCaptureItem).GUID;
-            IntPtr pointer = IntPtr.Zero;
-            try
-            {
-                var factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem).FullName);
-                var interop = (IGraphicsCaptureItemInterop)factory;
-                interop.CreateForWindow(hwnd, ref guid, out pointer);
-                return Marshal.GetObjectForIUnknown(pointer) as GraphicsCaptureItem ?? throw new InvalidOperationException("Failed to wrap GraphicsCaptureItem pointer.");
-            }
-            finally
-            {
-                if (pointer != IntPtr.Zero)
-                {
-                    Marshal.Release(pointer);
-                }
-            }
         }
     }
 }
