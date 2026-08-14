@@ -18,8 +18,7 @@
     <EnableMsixTooling>false</EnableMsixTooling>
     <ImportAppxTargets>false</ImportAppxTargets>
     <WindowsPackageType>None</WindowsPackageType>
-    <EnablePriGen>false</EnablePriGen>
-    <SkipWriteAppxManifest>true</SkipWriteAppxManifest>
-    <AppxMSBuildToolsPath>$(MSBuildThisFileDirectory)</AppxMSBuildToolsPath>
+    <EnableCoreMrtTooling>false</EnableCoreMrtTooling>
+    <EnablePriGenTooling>false</EnablePriGenTooling>
   </PropertyGroup>
 </Project>
