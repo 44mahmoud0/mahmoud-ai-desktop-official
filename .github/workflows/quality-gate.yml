@@ -33,18 +33,25 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Preflight Solution and Project Assertion (Anti-False-Green V2)
+    - name: Preflight Solution and Project Assertion (Anti-False-Green V3.1)
       shell: pwsh
       run: |
         if (!(Test-Path "MahmoudAI.sln")) {
           Write-Error "CRITICAL: MahmoudAI.sln not found!"
           exit 1
         }
-        $projects = [string[]](dotnet sln MahmoudAI.sln list)
-        Write-Host "Projects discovered in solution:"
-        $projects | ForEach-Object { Write-Host " - $_" }
+        $slnOutput = dotnet sln MahmoudAI.sln list
+        $projects = @()
+        foreach ($line in $slnOutput) {
+          $trimmed = $line.Trim().Trim("`r", "`n")
+          if ($trimmed -and $trimmed -notmatch "^Project\(s\)" -and $trimmed -notmatch "^---") {
+            $projects += $trimmed
+          }
+        }
+        Write-Host "Strictly parsed projects in solution ($($projects.Count)):"
+        $projects | ForEach-Object { Write-Host " - '$_'" }
 
-        $requiredPaths = @(
+        $expectedProjects = @(
           "src\MahmoudAI.App\MahmoudAI.App.csproj",
           "src\MahmoudAI.Core\MahmoudAI.Core.csproj",
           "src\MahmoudAI.Mcp\MahmoudAI.Mcp.csproj",
@@ -56,38 +63,38 @@ jobs:
           "tests\MahmoudAI.WindowsIntegration.TestHost\MahmoudAI.WindowsIntegration.TestHost.csproj"
         )
 
-        foreach ($req in $requiredPaths) {
-          $normalizedReq = $req.Replace('\', '/')
+        if ($projects.Count -ne $expectedProjects.Count) {
+          Write-Error "CRITICAL: Expected exactly $($expectedProjects.Count) projects, but found $($projects.Count)!"
+          exit 1
+        }
+
+        foreach ($exp in $expectedProjects) {
+          $normExp = $exp.Replace('\', '/').ToLower()
           $found = $false
           foreach ($p in $projects) {
-            $normalizedP = $p.Replace('\', '/')
-            if ($normalizedP -like "*$normalizedReq*") {
+            $normP = $p.Replace('\', '/').ToLower()
+            if ($normP -like "*$normExp*") {
               $found = $true
               break
             }
           }
           if (-not $found) {
-            Write-Error "CRITICAL: Required project path '$req' is missing from MahmoudAI.sln!"
+            Write-Error "CRITICAL: Required project '$exp' is missing from solution parse!"
             exit 1
           }
         }
-        
-        if ($projects.Count -lt 9) {
-          Write-Error "CRITICAL: Expected at least 9 projects in solution, but found $($projects.Count)!"
-          exit 1
-        }
-        Write-Host "All 9 project exact path preflight assertions passed successfully."
+        Write-Host "Exact 9-project strict solution preflight passed successfully."
 
     - name: Restore Dependencies
-      run: dotnet restore MahmoudAI.sln /p:ContinuousIntegrationBuild=true
+      run: dotnet restore MahmoudAI.sln /p:MahmoudAIUnpackagedCiBuild=true /p:ContinuousIntegrationBuild=true
 
     - name: Build Solution (Release)
-      run: dotnet build MahmoudAI.sln --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
+      run: dotnet build MahmoudAI.sln --configuration Release --no-restore /p:MahmoudAIUnpackagedCiBuild=true /p:ContinuousIntegrationBuild=true
 
     - name: Run Test Suite (Release)
-      run: dotnet test MahmoudAI.sln --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx"
+      run: dotnet test MahmoudAI.sln --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx" /p:MahmoudAIUnpackagedCiBuild=true
 
-    - name: Verify Test Results (TRX Parser)
+    - name: Verify Test Results (Assembly-Specific TRX Parser)
       shell: pwsh
       run: |
         $trxFiles = Get-ChildItem -Recurse -Filter "*.trx"
@@ -96,33 +103,74 @@ jobs:
           exit 1
         }
         Write-Host "Found $($trxFiles.Count) TRX file(s):"
-        $totalPassed = 0
-        $totalTests = 0
+        
+        $corePassed = 0
+        $coreTotal = 0
+        $windowsPassed = 0
+        $windowsTotal = 0
+        $globalPassed = 0
+        $globalTotal = 0
+
         foreach ($file in $trxFiles) {
-          Write-Host "Processing: $($file.FullName)"
+          Write-Host "Processing TRX: $($file.FullName)"
           [xml]$xml = Get-Content $file.FullName
-          # Basic XML namespace handling for MSTest TRX
           $ns = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
           $ns.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
           
+          $content = Get-Content $file.FullName -Raw
+          $isCoreTest = $content -match "MahmoudAI\.Core\.Tests"
+          $isWindowsTest = $content -match "MahmoudAI\.WindowsIntegration\.Tests"
+
           $counters = $xml.SelectNodes("//t:Counters", $ns)
+          $fileTotal = 0
+          $filePassed = 0
           foreach ($c in $counters) {
-            $totalTests += [int]$c.total
-            $totalPassed += [int]$c.passed
+            $fileTotal += [int]$c.total
+            $filePassed += [int]$c.passed
+          }
+
+          if ($isCoreTest -and !$isWindowsTest) {
+            $coreTotal += $fileTotal
+            $corePassed += $filePassed
+            Write-Host " -> Identified as MahmoudAI.Core.Tests: $filePassed / $fileTotal passed"
+          } elseif ($isWindowsTest -and !$isCoreTest) {
+            $windowsTotal += $fileTotal
+            $windowsPassed += $filePassed
+            Write-Host " -> Identified as MahmoudAI.WindowsIntegration.Tests: $filePassed / $fileTotal passed"
+          } else {
+            $globalTotal += $fileTotal
+            $globalPassed += $filePassed
+            Write-Host " -> General / Aggregate suite: $filePassed / $fileTotal passed"
           }
         }
-        Write-Host "Total Tests Executed: $totalTests"
-        Write-Host "Total Tests Passed: $totalPassed"
 
+        $finalCore = if ($coreTotal -gt 0) { $coreTotal } else { $globalTotal }
+        $finalCorePassed = if ($corePassed -gt 0) { $corePassed } else { $globalPassed }
+
+        Write-Host "Summary Breakdown:"
+        Write-Host " - Core Tests: $finalCorePassed / $finalCore (Required >= 71)"
+        Write-Host " - WindowsIntegration Tests: $windowsPassed / $windowsTotal (Required >= 7)"
+        
+        $totalTests = $finalCore + $windowsTotal
+        $totalPassed = $finalCorePassed + $windowsPassed
+
+        if ($finalCore -lt 71) {
+          Write-Error "CRITICAL: MahmoudAI.Core.Tests count ($finalCore) is below the minimum baseline of 71!"
+          exit 1
+        }
+        if ($windowsTotal -lt 7) {
+          Write-Error "CRITICAL: MahmoudAI.WindowsIntegration.Tests count ($windowsTotal) is below the minimum baseline of 7!"
+          exit 1
+        }
         if ($totalTests -lt 78) {
-          Write-Error "CRITICAL: Total test count ($totalTests) is below the minimum regression baseline of 78!"
+          Write-Error "CRITICAL: Total test count ($totalTests) is below the minimum baseline of 78!"
           exit 1
         }
         if ($totalPassed -lt $totalTests) {
           Write-Error "CRITICAL: Not all tests passed ($totalPassed / $totalTests)!"
           exit 1
         }
-        Write-Host "Test result verification PASSED: $totalPassed/$totalTests tests passed."
+        Write-Host "Assembly-specific TRX verification PASSED: Core ($finalCorePassed/$finalCore), WindowsIntegration ($windowsPassed/$windowsTotal), Total ($totalPassed/$totalTests)."
 
     - name: Upload Test Results
       if: always()
