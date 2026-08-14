@@ -10,17 +10,14 @@
     <NuGetAuditMode>all</NuGetAuditMode>
     <NuGetAuditLevel>low</NuGetAuditLevel>
     <WarningsAsErrors>$(WarningsAsErrors);NU1903;NU1904</WarningsAsErrors>
-    <DisableHasPackageType>true</DisableHasPackageType>
-    <AppxPackage>false</AppxPackage>
-    <AppxPackageEnabled>false</AppxPackageEnabled>
-    <GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
-    <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>
-    <EnableMsixTooling>false</EnableMsixTooling>
-    <ImportAppxTargets>false</ImportAppxTargets>
-    <WindowsPackageType>None</WindowsPackageType>
-    <EnableCoreMrtTooling>false</EnableCoreMrtTooling>
-    <EnablePriGenTooling>false</EnablePriGenTooling>
-    <DisableWinUIXamlCompilerTask>true</DisableWinUIXamlCompilerTask>
-    <EnableXamlCompiler>false</EnableXamlCompiler>
+
+    <!-- Scoped strictly to explicit unpackaged CI / CLI build mode via MahmoudAIUnpackagedCiBuild=true -->
+    <WindowsPackageType Condition="'$(MahmoudAIUnpackagedCiBuild)' == 'true'">None</WindowsPackageType>
+    <EnableMsixTooling Condition="'$(MahmoudAIUnpackagedCiBuild)' == 'true'">false</EnableMsixTooling>
+    <AppxPackage Condition="'$(MahmoudAIUnpackagedCiBuild)' == 'true'">false</AppxPackage>
+    <GenerateAppxPackageOnBuild Condition="'$(MahmoudAIUnpackagedCiBuild)' == 'true'">false</GenerateAppxPackageOnBuild>
+    <AppxGeneratePriEnabled Condition="'$(MahmoudAIUnpackagedCiBuild)' == 'true'">false</AppxGeneratePriEnabled>
+    <EnableCoreMrtTooling Condition="'$(MahmoudAIUnpackagedCiBuild)' == 'true'">false</EnableCoreMrtTooling>
+    <EnablePriGenTooling Condition="'$(MahmoudAIUnpackagedCiBuild)' == 'true'">false</EnablePriGenTooling>
   </PropertyGroup>
 </Project>
