@@ -12,21 +12,14 @@
     <WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
     <EnableMsixTooling>false</EnableMsixTooling>
     <DisableWinUIXamlCompilerTask>true</DisableWinUIXamlCompilerTask>
-    <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>
-    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-    <GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
-    <AppxPackage>false</AppxPackage>
+    <WindowsPackageType>None</WindowsPackageType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectCapability Remove="Msix" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>
