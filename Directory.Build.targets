@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup Condition="'$(UseWinUI)' == 'true'">
+    <WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    <EnableDefaultXamlItems>false</EnableDefaultXamlItems>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(UseWinUI)' != 'true'">
+    <WindowsAppSdkSelfContained>false</WindowsAppSdkSelfContained>
+  </PropertyGroup>
+</Project>

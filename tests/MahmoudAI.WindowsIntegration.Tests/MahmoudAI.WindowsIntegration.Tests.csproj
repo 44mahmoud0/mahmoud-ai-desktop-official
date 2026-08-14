@@ -8,7 +8,6 @@
     <IsPackable>false</IsPackable>
     <UseWinUI>false</UseWinUI>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
   </PropertyGroup>
 
   <ItemGroup>
