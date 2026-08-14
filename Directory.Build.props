@@ -15,6 +15,10 @@
     <GenerateAppxPackageOnBuild>false</GenerateAppxPackageOnBuild>
     <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>
     <EnableMsixTooling>false</EnableMsixTooling>
-    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <WindowsAppSDKSelfContained Condition="'$(UseWinUI)' == 'true'">true</WindowsAppSDKSelfContained>
+    <WindowsAppSDKSelfContained Condition="'$(UseWinUI)' != 'true'">false</WindowsAppSDKSelfContained>
+    <EnableDefaultPageItems Condition="'$(UseWinUI)' == 'true'">false</EnableDefaultPageItems>
+    <EnableDefaultApplicationDefinition Condition="'$(UseWinUI)' == 'true'">false</EnableDefaultApplicationDefinition>
+    <EnableDefaultXamlItems Condition="'$(UseWinUI)' == 'true'">false</EnableDefaultXamlItems>
   </PropertyGroup>
 </Project>
