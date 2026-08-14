@@ -14,12 +14,26 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+    - name: Print Identity and Context Proof
+      shell: pwsh
+      run: |
+        Write-Host "========================================="
+        Write-Host "MAHMOUD AI CI IDENTITY & CONTEXT PROOF"
+        Write-Host "========================================="
+        Write-Host "Event Name: ${{ github.event_name }}"
+        Write-Host "GitHub Ref: ${{ github.ref }}"
+        Write-Host "GitHub SHA: ${{ github.sha }}"
+        Write-Host "PR Head SHA: ${{ github.event.pull_request.head.sha }}"
+        Write-Host "PR Base SHA: ${{ github.event.pull_request.base.sha }}"
+        Write-Host "Repository: ${{ github.repository }}"
+        Write-Host "========================================="
+
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
 
-    - name: Preflight Solution and Project Assertion
+    - name: Preflight Solution and Project Assertion (Anti-False-Green V2)
       shell: pwsh
       run: |
         if (!(Test-Path "MahmoudAI.sln")) {
@@ -27,33 +41,88 @@ jobs:
           exit 1
         }
         $projects = [string[]](dotnet sln MahmoudAI.sln list)
-        Write-Host "Projects in solution:"
+        Write-Host "Projects discovered in solution:"
         $projects | ForEach-Object { Write-Host " - $_" }
 
-        $requiredProjects = @("MahmoudAI.Core", "MahmoudAI.WindowsIntegration", "MahmoudAI.Storage", "MahmoudAI.Security", "MahmoudAI.Mcp", "MahmoudAI.App", "MahmoudAI.Core.Tests")
-        foreach ($req in $requiredProjects) {
+        $requiredPaths = @(
+          "src\MahmoudAI.App\MahmoudAI.App.csproj",
+          "src\MahmoudAI.Core\MahmoudAI.Core.csproj",
+          "src\MahmoudAI.Mcp\MahmoudAI.Mcp.csproj",
+          "src\MahmoudAI.Security\MahmoudAI.Security.csproj",
+          "src\MahmoudAI.Storage\MahmoudAI.Storage.csproj",
+          "src\MahmoudAI.WindowsIntegration\MahmoudAI.WindowsIntegration.csproj",
+          "tests\MahmoudAI.Core.Tests\MahmoudAI.Core.Tests.csproj",
+          "tests\MahmoudAI.WindowsIntegration.Tests\MahmoudAI.WindowsIntegration.Tests.csproj",
+          "tests\MahmoudAI.WindowsIntegration.TestHost\MahmoudAI.WindowsIntegration.TestHost.csproj"
+        )
+
+        foreach ($req in $requiredPaths) {
+          $normalizedReq = $req.Replace('\', '/')
           $found = $false
           foreach ($p in $projects) {
-            if ($p -match $req) {
+            $normalizedP = $p.Replace('\', '/')
+            if ($normalizedP -like "*$normalizedReq*") {
               $found = $true
               break
             }
           }
           if (-not $found) {
-            Write-Error "CRITICAL: Required project '$req' is missing from MahmoudAI.sln!"
+            Write-Error "CRITICAL: Required project path '$req' is missing from MahmoudAI.sln!"
             exit 1
           }
         }
-        Write-Host "All critical project preflight assertions passed successfully."
+        
+        if ($projects.Count -lt 9) {
+          Write-Error "CRITICAL: Expected at least 9 projects in solution, but found $($projects.Count)!"
+          exit 1
+        }
+        Write-Host "All 9 project exact path preflight assertions passed successfully."
 
     - name: Restore Dependencies
-      run: dotnet restore MahmoudAI.sln
+      run: dotnet restore MahmoudAI.sln /p:ContinuousIntegrationBuild=true
 
     - name: Build Solution (Release)
-      run: dotnet build MahmoudAI.sln --configuration Release --no-restore
+      run: dotnet build MahmoudAI.sln --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
 
     - name: Run Test Suite (Release)
       run: dotnet test MahmoudAI.sln --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx"
+
+    - name: Verify Test Results (TRX Parser)
+      shell: pwsh
+      run: |
+        $trxFiles = Get-ChildItem -Recurse -Filter "*.trx"
+        if ($trxFiles.Count -eq 0) {
+          Write-Error "CRITICAL: No TRX test result files were generated!"
+          exit 1
+        }
+        Write-Host "Found $($trxFiles.Count) TRX file(s):"
+        $totalPassed = 0
+        $totalTests = 0
+        foreach ($file in $trxFiles) {
+          Write-Host "Processing: $($file.FullName)"
+          [xml]$xml = Get-Content $file.FullName
+          # Basic XML namespace handling for MSTest TRX
+          $ns = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
+          $ns.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
+          
+          $counters = $xml.SelectNodes("//t:Counters", $ns)
+          foreach ($c in $counters) {
+            $totalTests += [int]$c.total
+            $totalPassed += [int]$c.passed
+          }
+        }
+        Write-Host "Total Tests Executed: $totalTests"
+        Write-Host "Total Tests Passed: $totalPassed"
+
+        if ($totalTests -lt 78) {
+          Write-Error "CRITICAL: Total test count ($totalTests) is below the minimum regression baseline of 78!"
+          exit 1
+        }
+        if ($totalPassed -lt $totalTests) {
+          Write-Error "CRITICAL: Not all tests passed ($totalPassed / $totalTests)!"
+          exit 1
+        }
+        Write-Host "Test result verification PASSED: $totalPassed/$totalTests tests passed."
 
     - name: Upload Test Results
       if: always()
@@ -61,3 +130,4 @@ jobs:
       with:
         name: test-results-trx
         path: '**/*.trx'
+        if-no-files-found: error

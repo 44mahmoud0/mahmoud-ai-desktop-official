@@ -9,10 +9,10 @@
     <WindowsAppSdkSelfContained>false</WindowsAppSdkSelfContained>
   </PropertyGroup>
 
-  <!-- Prevent missing AppxPackage assembly execution in CLI builds -->
-  <Target Name="RemovePayloadDuplicates" />
-  <Target Name="_GetPriFile" />
-  <Target Name="GetPriFiles" />
-  <Target Name="_CalculateAppxPackagePayload" />
-  <Target Name="_CompileAppxManifest" />
+  <!-- Prevent missing AppxPackage assembly execution in CLI / Unpackaged CI builds without disabling future production MSIX pipeline -->
+  <Target Name="RemovePayloadDuplicates" Condition="'$(WindowsPackageType)' == 'None' or '$(ContinuousIntegrationBuild)' == 'true'" />
+  <Target Name="_GetPriFile" Condition="'$(WindowsPackageType)' == 'None' or '$(ContinuousIntegrationBuild)' == 'true'" />
+  <Target Name="GetPriFiles" Condition="'$(WindowsPackageType)' == 'None' or '$(ContinuousIntegrationBuild)' == 'true'" />
+  <Target Name="_CalculateAppxPackagePayload" Condition="'$(WindowsPackageType)' == 'None' or '$(ContinuousIntegrationBuild)' == 'true'" />
+  <Target Name="_CompileAppxManifest" Condition="'$(WindowsPackageType)' == 'None' or '$(ContinuousIntegrationBuild)' == 'true'" />
 </Project>

@@ -20,5 +20,7 @@
     <WindowsPackageType>None</WindowsPackageType>
     <EnableCoreMrtTooling>false</EnableCoreMrtTooling>
     <EnablePriGenTooling>false</EnablePriGenTooling>
+    <DisableWinUIXamlCompilerTask>true</DisableWinUIXamlCompilerTask>
+    <EnableXamlCompiler>false</EnableXamlCompiler>
   </PropertyGroup>
 </Project>
