@@ -12,6 +12,8 @@
     <WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
     <EnableMsixTooling>false</EnableMsixTooling>
     <DisableWinUIXamlCompilerTask>true</DisableWinUIXamlCompilerTask>
+    <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
 
   <ItemGroup>

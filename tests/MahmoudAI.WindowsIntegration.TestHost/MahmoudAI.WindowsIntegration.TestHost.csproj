@@ -12,6 +12,8 @@
     <WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
     <EnableMsixTooling>false</EnableMsixTooling>
     <DisableWinUIXamlCompilerTask>true</DisableWinUIXamlCompilerTask>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
