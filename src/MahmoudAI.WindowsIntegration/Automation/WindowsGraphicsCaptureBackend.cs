@@ -10,8 +10,6 @@ using Windows.Foundation;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX;
 using Windows.Graphics.DirectX.Direct3D11;
-using Windows.Win32;
-using Windows.Win32.Foundation;
 
 namespace MahmoudAI.WindowsIntegration.Automation
 {
@@ -72,10 +70,13 @@ namespace MahmoudAI.WindowsIntegration.Automation
             GraphicsCaptureItem? item;
             try
             {
-                var factory = Marshal.GetActivationFactory(typeof(GraphicsCaptureItem));
-                var interop = (IGraphicsCaptureItemInterop)factory;
+                var interop = global::WinRT.MarshalInspectable<GraphicsCaptureItem>.FromAbi(IntPtr.Zero); // Or via IGraphicsCaptureItemInterop
                 var riid = typeof(GraphicsCaptureItem).GUID;
-                interop.CreateForWindow(hwnd, ref riid, out var result);
+                
+                // Direct activation factory & interop call
+                var factory = global::Windows.Foundation.ActivationFactory.GetActivationFactory<GraphicsCaptureItem>();
+                var captureInterop = (IGraphicsCaptureItemInterop)factory;
+                captureInterop.CreateForWindow(hwnd, ref riid, out var result);
                 try
                 {
                     item = Marshal.GetObjectForIUnknown(result) as GraphicsCaptureItem;
@@ -283,13 +284,12 @@ namespace MahmoudAI.WindowsIntegration.Automation
             status = ScreenCaptureStatus.NotFound;
             error = "Target window was not found.";
 
-            var window = (HWND)hwnd;
-            if (!PInvoke.IsWindow(window) || !PInvoke.IsWindowVisible(window))
+            if (hwnd == IntPtr.Zero || !NativeMethods.IsWindow(hwnd) || !NativeMethods.IsWindowVisible(hwnd))
             {
                 return false;
             }
 
-            PInvoke.GetWindowThreadProcessId(window, out var actualProcessId);
+            NativeMethods.GetWindowThreadProcessId(hwnd, out var actualProcessId);
             if (actualProcessId != (uint)expectedProcessId)
             {
                 status = ScreenCaptureStatus.ProcessMismatch;
@@ -297,24 +297,24 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 return false;
             }
 
-            if (!PInvoke.GetWindowRect(window, out var bounds))
+            if (!NativeMethods.GetWindowRect(hwnd, out var bounds))
             {
                 status = ScreenCaptureStatus.NotFound;
                 error = "Target window bounds could not be resolved.";
                 return false;
             }
 
-            if (bounds.right <= bounds.left || bounds.bottom <= bounds.top)
+            if (bounds.Right <= bounds.Left || bounds.Bottom <= bounds.Top)
             {
                 status = ScreenCaptureStatus.NotFound;
                 error = "Target window has no visible bounds.";
                 return false;
             }
 
-            originX = bounds.left;
-            originY = bounds.top;
+            originX = bounds.Left;
+            originY = bounds.Top;
 
-            var dpi = PInvoke.GetDpiForWindow(window);
+            var dpi = NativeMethods.GetDpiForWindow(hwnd);
             if (dpi > 0)
             {
                 dpiScaleX = dpi / 96.0f;
@@ -403,5 +403,35 @@ namespace MahmoudAI.WindowsIntegration.Automation
         {
             return new CapturedScreenFrame(status, null, null, null, error);
         }
+    }
+
+    internal static class NativeMethods
+    {
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool IsWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern uint GetDpiForWindow(IntPtr hWnd);
     }
 }
