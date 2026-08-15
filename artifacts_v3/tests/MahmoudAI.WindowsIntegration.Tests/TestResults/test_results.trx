@@ -1,0 +1,308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="da2a9804-299e-40b1-b8cb-250fcb5d987f" name="runneradmin@runnervmk2qs2 2026-08-15 08:45:59" runUser="runnervmk2qs2\runneradmin" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-08-15T08:45:59.2218421+00:00" queuing="2026-08-15T08:45:59.2218423+00:00" start="2026-08-15T08:45:57.4690242+00:00" finish="2026-08-15T08:46:04.7450351+00:00" />
+  <TestSettings name="default" id="3bb6274c-67a9-42c4-9fb0-9fcfb3d18875">
+    <Deployment runDeploymentRoot="runneradmin_runnervmk2qs2_2026-08-15_08_45_59" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="f4d58c60-06c0-472d-906a-4ea6d889235f" testId="d8170b71-14b7-c986-0a66-cc8b7da4514e" testName="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Composition_CreatesGuardedBackend_WithoutExposingRawTypes" computerName="runnervmk2qs2" duration="00:00:00.0022796" startTime="2026-08-15T08:45:58.5958694+00:00" endTime="2026-08-15T08:45:58.5976331+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f4d58c60-06c0-472d-906a-4ea6d889235f" />
+    <UnitTestResult executionId="2984b62d-af4a-4e50-b35d-996d10a10bb0" testId="7a423c5d-55ef-29e0-8794-d47691a08028" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealHwndWrongPid_ReturnsProcessMismatch" computerName="runnervmk2qs2" duration="00:00:00.4315913" startTime="2026-08-15T08:46:03.3884391+00:00" endTime="2026-08-15T08:46:03.8197620+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2984b62d-af4a-4e50-b35d-996d10a10bb0" />
+    <UnitTestResult executionId="36562186-eb18-481e-89e8-03a289019e1c" testId="c9b9c0cb-f1ff-cfa9-3bcc-976ca31c2ac0" testName="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Uia3Backend_Action_InvalidWindow_ReturnsNotFound" computerName="runnervmk2qs2" duration="00:00:00.0017293" startTime="2026-08-15T08:45:58.6030685+00:00" endTime="2026-08-15T08:45:58.6046316+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="36562186-eb18-481e-89e8-03a289019e1c" />
+    <UnitTestResult executionId="8c6f245d-aae7-4979-9422-ae60095a6d4f" testId="019ee408-87f6-77d6-84bc-9bfc6eab4919" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_DownscalesWithoutUpscaling" computerName="runnervmk2qs2" duration="00:00:00.4303610" startTime="2026-08-15T08:46:04.2444402+00:00" endTime="2026-08-15T08:46:04.6758456+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8c6f245d-aae7-4979-9422-ae60095a6d4f">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Captured&#xD;
+Actual:   ProviderError</Message>
+          <StackTrace>   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_DownscalesWithoutUpscaling() in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 207&#xD;
+   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_DownscalesWithoutUpscaling() in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 220&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5f7d8412-1225-4197-b2da-66faea9f2387" testId="996e4a20-6a8f-34e6-886c-d5d0a93c1e88" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RepeatedRealCaptures_AllComplete" computerName="runnervmk2qs2" duration="00:00:00.4216723" startTime="2026-08-15T08:46:02.5598756+00:00" endTime="2026-08-15T08:46:02.9818659+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5f7d8412-1225-4197-b2da-66faea9f2387">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Captured&#xD;
+Actual:   ProviderError</Message>
+          <StackTrace>   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RepeatedRealCaptures_AllComplete() in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 294&#xD;
+   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RepeatedRealCaptures_AllComplete() in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 307&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3f118acf-8dcf-4968-84af-a614f67e7f73" testId="53c73e96-b453-bac2-bd56-29c4618b9ec6" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTargetCrop_ProducesAuthoritativeTransform" computerName="runnervmk2qs2" duration="00:00:00.4044672" startTime="2026-08-15T08:46:02.9825863+00:00" endTime="2026-08-15T08:46:03.3875033+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3f118acf-8dcf-4968-84af-a614f67e7f73">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: Captured&#xD;
+Actual:   ProviderError</Message>
+          <StackTrace>   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTargetCrop_ProducesAuthoritativeTransform() in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 253&#xD;
+   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTargetCrop_ProducesAuthoritativeTransform() in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 263&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="7f7e1deb-131e-488a-a1e1-836d1b265178" testId="b5be3f44-b680-fcd1-87c7-258863ff4088" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ClosedTarget_DoesNotCapture" computerName="runnervmk2qs2" duration="00:00:00.4237446" startTime="2026-08-15T08:46:03.8199886+00:00" endTime="2026-08-15T08:46:04.2441297+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7f7e1deb-131e-488a-a1e1-836d1b265178" />
+    <UnitTestResult executionId="12a6a114-d01f-434a-8995-a9b246f9ac89" testId="9e6174f4-09fe-4451-4992-8320b653a705" testName="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Uia3Backend_CancelledQuery_ReturnsCancelled" computerName="runnervmk2qs2" duration="00:00:00.0700311" startTime="2026-08-15T08:45:58.5112999+00:00" endTime="2026-08-15T08:45:58.5841892+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="12a6a114-d01f-434a-8995-a9b246f9ac89" />
+    <UnitTestResult executionId="0acd7d53-7ce7-40c6-965b-74de0d09f3f7" testId="46ca9bcc-d2ff-fee2-0aa5-9fe97d3146d8" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: 0, height: 100)" computerName="runnervmk2qs2" duration="00:00:00.4631763" startTime="2026-08-15T08:46:00.6831862+00:00" endTime="2026-08-15T08:46:01.1465740+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0acd7d53-7ce7-40c6-965b-74de0d09f3f7">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: UnsupportedTarget&#xD;
+Actual:   ProviderError</Message>
+          <StackTrace>   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height) in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 122&#xD;
+   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height) in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 126&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b94a107b-c7ad-4569-8eff-7e0385ff2e34" testId="1126d423-de4e-cc8c-ccce-c6f022fbf3e3" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTarget_PreCancelled_ReturnsCancelled" computerName="runnervmk2qs2" duration="00:00:00.7644452" startTime="2026-08-15T08:45:58.3209798+00:00" endTime="2026-08-15T08:45:59.0958237+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b94a107b-c7ad-4569-8eff-7e0385ff2e34" />
+    <UnitTestResult executionId="2d1c88ba-6cd0-41b0-8c95-3809471ad1aa" testId="f6139fc1-f12e-f2f6-e82b-d3284e3f1a3a" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: 100, height: -1)" computerName="runnervmk2qs2" duration="00:00:00.6010827" startTime="2026-08-15T08:45:59.1476446+00:00" endTime="2026-08-15T08:45:59.7160850+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2d1c88ba-6cd0-41b0-8c95-3809471ad1aa">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: UnsupportedTarget&#xD;
+Actual:   ProviderError</Message>
+          <StackTrace>   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height) in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 122&#xD;
+   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height) in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 126&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c77a31ae-7dfc-4f8b-9ad0-661644ba6bd2" testId="aa92d67b-2f74-1e72-d62d-570d0f8247de" testName="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Win32Backend_Inspect_InvalidHwnd_ReturnsFailure" computerName="runnervmk2qs2" duration="00:00:00.0031566" startTime="2026-08-15T08:45:58.5955057+00:00" endTime="2026-08-15T08:45:58.5955835+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c77a31ae-7dfc-4f8b-9ad0-661644ba6bd2" />
+    <UnitTestResult executionId="0fd0fe3a-6902-409a-a970-add49df1cda8" testId="d03567c7-31cf-1e97-b866-7f68a1c544ec" testName="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Composition_CreatesGuardedSemanticAutomation" computerName="runnervmk2qs2" duration="00:00:00.0032130" startTime="2026-08-15T08:45:58.5951917+00:00" endTime="2026-08-15T08:45:58.5952799+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0fd0fe3a-6902-409a-a970-add49df1cda8" />
+    <UnitTestResult executionId="8da1c497-0274-4c19-ac7f-3ccb35231b49" testId="fb1fad25-70a8-c065-a49a-0f82c9a39b0c" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_ReturnsRealPixels" computerName="runnervmk2qs2" duration="00:00:01.4112229" startTime="2026-08-15T08:46:01.1482281+00:00" endTime="2026-08-15T08:46:02.5590934+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8da1c497-0274-4c19-ac7f-3ccb35231b49">
+      <Output>
+        <ErrorInfo>
+          <Message>System.InvalidOperationException : TestHost exited before window initialization. ExitCode=-1073740940</Message>
+          <StackTrace>   at MahmoudAI.WindowsIntegration.Tests.WindowsTestHostFixture.StartAsync(CancellationToken cancellationToken) in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsTestHostFixture.cs:line 57&#xD;
+   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_ReturnsRealPixels() in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 18&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b302541f-6f39-4c51-a93b-0f0d41737b84" testId="c41f63e2-cbd4-ce07-79ac-5d983a3d5690" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: 100, height: 0)" computerName="runnervmk2qs2" duration="00:00:00.4402826" startTime="2026-08-15T08:46:00.2416073+00:00" endTime="2026-08-15T08:46:00.6821134+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b302541f-6f39-4c51-a93b-0f0d41737b84">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: UnsupportedTarget&#xD;
+Actual:   ProviderError</Message>
+          <StackTrace>   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height) in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 122&#xD;
+   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height) in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 126&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="39846739-1a4a-4447-9fe7-6cd8b769852a" testId="a7d5d96f-11fb-1a53-eee2-459db3d66187" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: -1, height: 100)" computerName="runnervmk2qs2" duration="00:00:00.5230781" startTime="2026-08-15T08:45:59.7232449+00:00" endTime="2026-08-15T08:46:00.2403711+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="39846739-1a4a-4447-9fe7-6cd8b769852a">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: UnsupportedTarget&#xD;
+Actual:   ProviderError</Message>
+          <StackTrace>   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height) in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 122&#xD;
+   at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height) in /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs:line 126&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="4dc6c825-591a-4e1a-95d8-a6cec34c8792" testId="bfe7a8ed-a2cc-79d4-23b9-71cbb9890728" testName="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureRegressionTests.CaptureAsync_StubBackend_ViolatesCaptureInvariants" computerName="runnervmk2qs2" duration="00:00:00.3152569" startTime="2026-08-15T08:45:58.3191685+00:00" endTime="2026-08-15T08:45:58.6426488+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4dc6c825-591a-4e1a-95d8-a6cec34c8792" />
+    <UnitTestResult executionId="fda499f5-e1ef-45a8-abd8-58ec84016db3" testId="6976108d-9ec7-d27f-1529-c09832fc72a4" testName="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Uia3Backend_Inspect_InvalidTarget_ReturnsFailureGracefully" computerName="runnervmk2qs2" duration="00:00:00.0044094" startTime="2026-08-15T08:45:58.5943395+00:00" endTime="2026-08-15T08:45:58.5945179+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fda499f5-e1ef-45a8-abd8-58ec84016db3" />
+    <UnitTestResult executionId="56d15c00-084b-4218-a767-2dc16246a42d" testId="596636ff-93f8-b3e1-e4d7-bc8f7cd9db9c" testName="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Uia3Backend_Query_InvalidWindow_ReturnsNotFound" computerName="runnervmk2qs2" duration="00:00:00.0050904" startTime="2026-08-15T08:45:58.5978841+00:00" endTime="2026-08-15T08:45:58.6028041+00:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="56d15c00-084b-4218-a767-2dc16246a42d" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Win32Backend_Inspect_InvalidHwnd_ReturnsFailure" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="aa92d67b-2f74-1e72-d62d-570d0f8247de">
+      <Execution id="c77a31ae-7dfc-4f8b-9ad0-661644ba6bd2" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests" name="Win32Backend_Inspect_InvalidHwnd_ReturnsFailure" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Composition_CreatesGuardedBackend_WithoutExposingRawTypes" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="d8170b71-14b7-c986-0a66-cc8b7da4514e">
+      <Execution id="f4d58c60-06c0-472d-906a-4ea6d889235f" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests" name="Composition_CreatesGuardedBackend_WithoutExposingRawTypes" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureRegressionTests.CaptureAsync_StubBackend_ViolatesCaptureInvariants" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="bfe7a8ed-a2cc-79d4-23b9-71cbb9890728">
+      <Execution id="4dc6c825-591a-4e1a-95d8-a6cec34c8792" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureRegressionTests" name="CaptureAsync_StubBackend_ViolatesCaptureInvariants" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Uia3Backend_CancelledQuery_ReturnsCancelled" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="9e6174f4-09fe-4451-4992-8320b653a705">
+      <Execution id="12a6a114-d01f-434a-8995-a9b246f9ac89" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests" name="Uia3Backend_CancelledQuery_ReturnsCancelled" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Uia3Backend_Query_InvalidWindow_ReturnsNotFound" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="596636ff-93f8-b3e1-e4d7-bc8f7cd9db9c">
+      <Execution id="56d15c00-084b-4218-a767-2dc16246a42d" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests" name="Uia3Backend_Query_InvalidWindow_ReturnsNotFound" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealHwndWrongPid_ReturnsProcessMismatch" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="7a423c5d-55ef-29e0-8794-d47691a08028">
+      <Execution id="2984b62d-af4a-4e50-b35d-996d10a10bb0" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_RealHwndWrongPid_ReturnsProcessMismatch" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RepeatedRealCaptures_AllComplete" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="996e4a20-6a8f-34e6-886c-d5d0a93c1e88">
+      <Execution id="5f7d8412-1225-4197-b2da-66faea9f2387" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_RepeatedRealCaptures_AllComplete" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_DownscalesWithoutUpscaling" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="019ee408-87f6-77d6-84bc-9bfc6eab4919">
+      <Execution id="8c6f245d-aae7-4979-9422-ae60095a6d4f" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_RealTestHost_DownscalesWithoutUpscaling" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_ReturnsRealPixels" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="fb1fad25-70a8-c065-a49a-0f82c9a39b0c">
+      <Execution id="8da1c497-0274-4c19-ac7f-3ccb35231b49" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_RealTestHost_ReturnsRealPixels" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTargetCrop_ProducesAuthoritativeTransform" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="53c73e96-b453-bac2-bd56-29c4618b9ec6">
+      <Execution id="3f118acf-8dcf-4968-84af-a614f67e7f73" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_RealTargetCrop_ProducesAuthoritativeTransform" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Uia3Backend_Action_InvalidWindow_ReturnsNotFound" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="c9b9c0cb-f1ff-cfa9-3bcc-976ca31c2ac0">
+      <Execution id="36562186-eb18-481e-89e8-03a289019e1c" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests" name="Uia3Backend_Action_InvalidWindow_ReturnsNotFound" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: -1, height: 100)" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="a7d5d96f-11fb-1a53-eee2-459db3d66187">
+      <Execution id="39846739-1a4a-4447-9fe7-6cd8b769852a" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_ValidTarget_InvalidRegion_IsRejected" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Uia3Backend_Inspect_InvalidTarget_ReturnsFailureGracefully" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="6976108d-9ec7-d27f-1529-c09832fc72a4">
+      <Execution id="fda499f5-e1ef-45a8-abd8-58ec84016db3" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests" name="Uia3Backend_Inspect_InvalidTarget_ReturnsFailureGracefully" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: 0, height: 100)" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="46ca9bcc-d2ff-fee2-0aa5-9fe97d3146d8">
+      <Execution id="0acd7d53-7ce7-40c6-965b-74de0d09f3f7" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_ValidTarget_InvalidRegion_IsRejected" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ClosedTarget_DoesNotCapture" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="b5be3f44-b680-fcd1-87c7-258863ff4088">
+      <Execution id="7f7e1deb-131e-488a-a1e1-836d1b265178" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_ClosedTarget_DoesNotCapture" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: 100, height: 0)" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="c41f63e2-cbd4-ce07-79ac-5d983a3d5690">
+      <Execution id="b302541f-6f39-4c51-a93b-0f0d41737b84" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_ValidTarget_InvalidRegion_IsRejected" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: 100, height: -1)" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="f6139fc1-f12e-f2f6-e82b-d3284e3f1a3a">
+      <Execution id="2d1c88ba-6cd0-41b0-8c95-3809471ad1aa" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_ValidTarget_InvalidRegion_IsRejected" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTarget_PreCancelled_ReturnsCancelled" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="1126d423-de4e-cc8c-ccce-c6f022fbf3e3">
+      <Execution id="b94a107b-c7ad-4569-8eff-7e0385ff2e34" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests" name="CaptureAsync_RealTarget_PreCancelled_ReturnsCancelled" />
+    </UnitTest>
+    <UnitTest name="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests.Composition_CreatesGuardedSemanticAutomation" storage="d:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\mahmoudai.windowsintegration.tests\bin\release\net8.0-windows10.0.19041.0\win-x64\mahmoudai.windowsintegration.tests.dll" id="d03567c7-31cf-1e97-b866-7f68a1c544ec">
+      <Execution id="0fd0fe3a-6902-409a-a970-add49df1cda8" />
+      <TestMethod codeBase="D:\a\mahmoud-ai-desktop-official\mahmoud-ai-desktop-official\tests\MahmoudAI.WindowsIntegration.Tests\bin\Release\net8.0-windows10.0.19041.0\win-x64\MahmoudAI.WindowsIntegration.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="MahmoudAI.WindowsIntegration.Tests.WindowsAutomationIntegrationTests" name="Composition_CreatesGuardedSemanticAutomation" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="d8170b71-14b7-c986-0a66-cc8b7da4514e" executionId="f4d58c60-06c0-472d-906a-4ea6d889235f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7a423c5d-55ef-29e0-8794-d47691a08028" executionId="2984b62d-af4a-4e50-b35d-996d10a10bb0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c9b9c0cb-f1ff-cfa9-3bcc-976ca31c2ac0" executionId="36562186-eb18-481e-89e8-03a289019e1c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="019ee408-87f6-77d6-84bc-9bfc6eab4919" executionId="8c6f245d-aae7-4979-9422-ae60095a6d4f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="996e4a20-6a8f-34e6-886c-d5d0a93c1e88" executionId="5f7d8412-1225-4197-b2da-66faea9f2387" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="53c73e96-b453-bac2-bd56-29c4618b9ec6" executionId="3f118acf-8dcf-4968-84af-a614f67e7f73" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b5be3f44-b680-fcd1-87c7-258863ff4088" executionId="7f7e1deb-131e-488a-a1e1-836d1b265178" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9e6174f4-09fe-4451-4992-8320b653a705" executionId="12a6a114-d01f-434a-8995-a9b246f9ac89" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="46ca9bcc-d2ff-fee2-0aa5-9fe97d3146d8" executionId="0acd7d53-7ce7-40c6-965b-74de0d09f3f7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1126d423-de4e-cc8c-ccce-c6f022fbf3e3" executionId="b94a107b-c7ad-4569-8eff-7e0385ff2e34" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f6139fc1-f12e-f2f6-e82b-d3284e3f1a3a" executionId="2d1c88ba-6cd0-41b0-8c95-3809471ad1aa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="aa92d67b-2f74-1e72-d62d-570d0f8247de" executionId="c77a31ae-7dfc-4f8b-9ad0-661644ba6bd2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d03567c7-31cf-1e97-b866-7f68a1c544ec" executionId="0fd0fe3a-6902-409a-a970-add49df1cda8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fb1fad25-70a8-c065-a49a-0f82c9a39b0c" executionId="8da1c497-0274-4c19-ac7f-3ccb35231b49" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c41f63e2-cbd4-ce07-79ac-5d983a3d5690" executionId="b302541f-6f39-4c51-a93b-0f0d41737b84" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a7d5d96f-11fb-1a53-eee2-459db3d66187" executionId="39846739-1a4a-4447-9fe7-6cd8b769852a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bfe7a8ed-a2cc-79d4-23b9-71cbb9890728" executionId="4dc6c825-591a-4e1a-95d8-a6cec34c8792" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6976108d-9ec7-d27f-1529-c09832fc72a4" executionId="fda499f5-e1ef-45a8-abd8-58ec84016db3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="596636ff-93f8-b3e1-e4d7-bc8f7cd9db9c" executionId="56d15c00-084b-4218-a767-2dc16246a42d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="19" executed="19" passed="11" failed="8" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.0.1+f8675c32e5 (64-bit .NET 8.0.30)&#xD;
+[xUnit.net 00:00:00.11]   Discovering: MahmoudAI.WindowsIntegration.Tests&#xD;
+[xUnit.net 00:00:00.17]   Discovered:  MahmoudAI.WindowsIntegration.Tests&#xD;
+[xUnit.net 00:00:00.23]   Starting:    MahmoudAI.WindowsIntegration.Tests&#xD;
+[xUnit.net 00:00:01.68]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:01.68]       Expected: UnsupportedTarget&#xD;
+[xUnit.net 00:00:01.68]       Actual:   ProviderError&#xD;
+[xUnit.net 00:00:01.68]       Stack Trace:&#xD;
+[xUnit.net 00:00:01.68]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(122,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height)&#xD;
+[xUnit.net 00:00:01.68]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(126,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height)&#xD;
+[xUnit.net 00:00:01.68]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.20]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:02.20]       Expected: UnsupportedTarget&#xD;
+[xUnit.net 00:00:02.20]       Actual:   ProviderError&#xD;
+[xUnit.net 00:00:02.20]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.20]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(122,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height)&#xD;
+[xUnit.net 00:00:02.20]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(126,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height)&#xD;
+[xUnit.net 00:00:02.20]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:02.64]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:02.64]       Expected: UnsupportedTarget&#xD;
+[xUnit.net 00:00:02.64]       Actual:   ProviderError&#xD;
+[xUnit.net 00:00:02.64]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.64]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(122,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height)&#xD;
+[xUnit.net 00:00:02.64]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(126,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height)&#xD;
+[xUnit.net 00:00:02.64]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.10]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:03.10]       Expected: UnsupportedTarget&#xD;
+[xUnit.net 00:00:03.10]       Actual:   ProviderError&#xD;
+[xUnit.net 00:00:03.10]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.10]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(122,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height)&#xD;
+[xUnit.net 00:00:03.10]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(126,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(Int32 x, Int32 y, Int32 width, Int32 height)&#xD;
+[xUnit.net 00:00:03.10]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.52]       System.InvalidOperationException : TestHost exited before window initialization. ExitCode=-1073740940&#xD;
+[xUnit.net 00:00:04.52]       Stack Trace:&#xD;
+[xUnit.net 00:00:04.52]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsTestHostFixture.cs(57,0): at MahmoudAI.WindowsIntegration.Tests.WindowsTestHostFixture.StartAsync(CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:04.52]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(18,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_ReturnsRealPixels()&#xD;
+[xUnit.net 00:00:04.52]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.94]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:04.94]       Expected: Captured&#xD;
+[xUnit.net 00:00:04.94]       Actual:   ProviderError&#xD;
+[xUnit.net 00:00:04.94]       Stack Trace:&#xD;
+[xUnit.net 00:00:04.94]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(294,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RepeatedRealCaptures_AllComplete()&#xD;
+[xUnit.net 00:00:04.94]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(307,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RepeatedRealCaptures_AllComplete()&#xD;
+[xUnit.net 00:00:04.94]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:05.34]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:05.34]       Expected: Captured&#xD;
+[xUnit.net 00:00:05.34]       Actual:   ProviderError&#xD;
+[xUnit.net 00:00:05.34]       Stack Trace:&#xD;
+[xUnit.net 00:00:05.34]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(253,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTargetCrop_ProducesAuthoritativeTransform()&#xD;
+[xUnit.net 00:00:05.34]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(263,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTargetCrop_ProducesAuthoritativeTransform()&#xD;
+[xUnit.net 00:00:05.34]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:06.63]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:06.63]       Expected: Captured&#xD;
+[xUnit.net 00:00:06.63]       Actual:   ProviderError&#xD;
+[xUnit.net 00:00:06.63]       Stack Trace:&#xD;
+[xUnit.net 00:00:06.63]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(207,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_DownscalesWithoutUpscaling()&#xD;
+[xUnit.net 00:00:06.63]         /_/tests/MahmoudAI.WindowsIntegration.Tests/WindowsGraphicsCaptureE2ETests.cs(220,0): at MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_DownscalesWithoutUpscaling()&#xD;
+[xUnit.net 00:00:06.63]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:06.64]   Finished:    MahmoudAI.WindowsIntegration.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="runnervmk2qs2" outcome="Error" timestamp="2026-08-15T08:45:59.7197093+00:00">
+        <Text>[xUnit.net 00:00:01.67]     MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: 100, height: -1) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="runnervmk2qs2" outcome="Error" timestamp="2026-08-15T08:46:00.2410340+00:00">
+        <Text>[xUnit.net 00:00:02.20]     MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: -1, height: 100) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="runnervmk2qs2" outcome="Error" timestamp="2026-08-15T08:46:00.6826291+00:00">
+        <Text>[xUnit.net 00:00:02.64]     MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: 100, height: 0) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="runnervmk2qs2" outcome="Error" timestamp="2026-08-15T08:46:01.1475268+00:00">
+        <Text>[xUnit.net 00:00:03.10]     MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_ValidTarget_InvalidRegion_IsRejected(x: 0, y: 0, width: 0, height: 100) [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="runnervmk2qs2" outcome="Error" timestamp="2026-08-15T08:46:02.5595183+00:00">
+        <Text>[xUnit.net 00:00:04.51]     MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_ReturnsRealPixels [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="runnervmk2qs2" outcome="Error" timestamp="2026-08-15T08:46:02.9822413+00:00">
+        <Text>[xUnit.net 00:00:04.94]     MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RepeatedRealCaptures_AllComplete [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="runnervmk2qs2" outcome="Error" timestamp="2026-08-15T08:46:03.3879439+00:00">
+        <Text>[xUnit.net 00:00:05.34]     MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTargetCrop_ProducesAuthoritativeTransform [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="runnervmk2qs2" outcome="Error" timestamp="2026-08-15T08:46:04.6762235+00:00">
+        <Text>[xUnit.net 00:00:06.63]     MahmoudAI.WindowsIntegration.Tests.WindowsGraphicsCaptureE2ETests.CaptureAsync_RealTestHost_DownscalesWithoutUpscaling [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

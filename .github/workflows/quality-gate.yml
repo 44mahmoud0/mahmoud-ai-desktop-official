@@ -166,6 +166,11 @@ jobs:
             }
           }
           if (-not $found) {
+            $outcome = $allTestResults[$allTestResults.Keys | Where-Object { $_ -like "*$req*" }]
+            if ($outcome -eq "Failed") {
+                Write-Host "##[warning] WINDOWS E2E BLOCKED BY HOSTED RUNNER ENVIRONMENT: $req failed with $outcome"
+                Write-Host "To achieve VERIFIED status, run this suite on an Interactive Desktop runner."
+            }
             Write-Error "CRITICAL: Mandatory behavioral test missing or failed: $req"
             exit 1
           }
