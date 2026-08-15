@@ -94,7 +94,7 @@ jobs:
     - name: Run Test Suite (Release)
       run: dotnet test MahmoudAI.sln --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx" /p:MahmoudAIUnpackagedCiBuild=true
 
-    - name: Verify Test Results (Strict Assembly-Specific TRX Parser - Gate 0)
+    - name: Verify Test Results (Strict V1.2.2 Behavioral Closure Gate)
       shell: pwsh
       run: |
         $trxFiles = Get-ChildItem -Recurse -Filter "*.trx"
@@ -102,15 +102,14 @@ jobs:
           Write-Error "CRITICAL: No TRX test result files were generated!"
           exit 1
         }
-        Write-Host "Found $($trxFiles.Count) TRX file(s):"
         
         $corePassed = 0
         $coreTotal = 0
         $windowsPassed = 0
         $windowsTotal = 0
+        $allTestResults = @{}
 
         foreach ($file in $trxFiles) {
-          Write-Host "Processing TRX: $($file.FullName)"
           [xml]$xml = Get-Content $file.FullName
           $ns = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
           $ns.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
@@ -119,65 +118,59 @@ jobs:
           $isCoreTest = $content -match "MahmoudAI\.Core\.Tests"
           $isWindowsTest = $content -match "MahmoudAI\.WindowsIntegration\.Tests"
 
+          $results = $xml.SelectNodes("//t:UnitTestResult", $ns)
+          foreach ($res in $results) {
+            $name = [string]$res.testName
+            $outcome = [string]$res.outcome
+            $allTestResults[$name] = $outcome
+          }
+
           $counters = $xml.SelectNodes("//t:Counters", $ns)
-          $fileTotal = 0
-          $filePassed = 0
           foreach ($c in $counters) {
-            $fileTotal += [int]$c.total
-            $filePassed += [int]$c.passed
-          }
-
-          if ($isCoreTest -and $isWindowsTest) {
-            Write-Error "CRITICAL: TRX file $($file.FullName) contains ambiguous markers identifying as both Core and WindowsIntegration tests!"
-            exit 1
-          }
-
-          if ($isCoreTest) {
-            $coreTotal += $fileTotal
-            $corePassed += $filePassed
-            Write-Host " -> Identified as MahmoudAI.Core.Tests: $filePassed / $fileTotal passed"
-          } elseif ($isWindowsTest) {
-            $windowsTotal += $fileTotal
-            $windowsPassed += $filePassed
-            Write-Host " -> Identified as MahmoudAI.WindowsIntegration.Tests: $filePassed / $fileTotal passed"
-          } else {
-            Write-Error "CRITICAL: TRX file $($file.FullName) does not match any recognized test assembly signature!"
-            exit 1
+            if ($isCoreTest) {
+              $coreTotal += [int]$c.total
+              $corePassed += [int]$c.passed
+            } elseif ($isWindowsTest) {
+              $windowsTotal += [int]$c.total
+              $windowsPassed += [int]$c.passed
+            }
           }
         }
 
         Write-Host "Summary Breakdown:"
         Write-Host " - Core Tests: $corePassed / $coreTotal (Required >= 71)"
-        Write-Host " - WindowsIntegration Tests: $windowsPassed / $windowsTotal (Required >= 7)"
+        Write-Host " - WindowsIntegration Tests: $windowsPassed / $windowsTotal (Required >= 10)"
         
-        $totalTests = $coreTotal + $windowsTotal
-        $totalPassed = $corePassed + $windowsPassed
+        if ($coreTotal -lt 71) { Write-Error "CRITICAL: Core baseline failed ($coreTotal < 71)"; exit 1 }
+        if ($windowsTotal -lt 10) { Write-Error "CRITICAL: WindowsIntegration baseline failed ($windowsTotal < 10)"; exit 1 }
+        if ($corePassed -ne $coreTotal) { Write-Error "CRITICAL: Core tests failed"; exit 1 }
+        if ($windowsPassed -ne $windowsTotal) { Write-Error "CRITICAL: WindowsIntegration tests failed"; exit 1 }
 
-        if ($coreTotal -eq 0) {
-          Write-Error "CRITICAL: MahmoudAI.Core.Tests suite was not found or yielded 0 tests!"
-          exit 1
+        $requiredWindowsTests = @(
+          "CaptureAsync_RealTestHost_ReturnsRealPixels",
+          "CaptureAsync_ValidTarget_InvalidRegion_IsRejected",
+          "CaptureAsync_RealHwndWrongPid_ReturnsProcessMismatch",
+          "CaptureAsync_ClosedTarget_DoesNotCapture",
+          "CaptureAsync_RepeatedRealCaptures_AllComplete"
+        )
+
+        foreach ($req in $requiredWindowsTests) {
+          $found = $false
+          foreach ($name in $allTestResults.Keys) {
+            if ($name -like "*$req*") {
+              if ($allTestResults[$name] -eq "Passed") {
+                $found = $true
+                Write-Host "Mandatory Test Verified: $name => Passed"
+                break
+              }
+            }
+          }
+          if (-not $found) {
+            Write-Error "CRITICAL: Mandatory behavioral test missing or failed: $req"
+            exit 1
+          }
         }
-        if ($windowsTotal -eq 0) {
-          Write-Error "CRITICAL: MahmoudAI.WindowsIntegration.Tests suite was not found or yielded 0 tests!"
-          exit 1
-        }
-        if ($coreTotal -lt 71) {
-          Write-Error "CRITICAL: MahmoudAI.Core.Tests count ($coreTotal) is below the minimum baseline of 71!"
-          exit 1
-        }
-        if ($windowsTotal -lt 7) {
-          Write-Error "CRITICAL: MahmoudAI.WindowsIntegration.Tests count ($windowsTotal) is below the minimum baseline of 7!"
-          exit 1
-        }
-        if ($totalTests -lt 78) {
-          Write-Error "CRITICAL: Total test count ($totalTests) is below the minimum baseline of 78!"
-          exit 1
-        }
-        if ($totalPassed -lt $totalTests) {
-          Write-Error "CRITICAL: Not all tests passed ($totalPassed / $totalTests)!"
-          exit 1
-        }
-        Write-Host "Strict assembly-specific TRX verification PASSED: Core ($corePassed/$coreTotal), WindowsIntegration ($windowsPassed/$windowsTotal), Total ($totalPassed/$totalTests)."
+        Write-Host "V1.2.2 Behavioral Closure Verification PASSED."
 
     - name: Upload Test Results
       if: always()
