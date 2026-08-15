@@ -33,7 +33,7 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Preflight Solution and Project Assertion (Anti-False-Green V3.1)
+    - name: Preflight Solution and Project Assertion (Anti-False-Green V4)
       shell: pwsh
       run: |
         if (!(Test-Path "MahmoudAI.sln")) {
@@ -94,7 +94,7 @@ jobs:
     - name: Run Test Suite (Release)
       run: dotnet test MahmoudAI.sln --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx" /p:MahmoudAIUnpackagedCiBuild=true
 
-    - name: Verify Test Results (Assembly-Specific TRX Parser)
+    - name: Verify Test Results (Strict Assembly-Specific TRX Parser - Gate 0)
       shell: pwsh
       run: |
         $trxFiles = Get-ChildItem -Recurse -Filter "*.trx"
@@ -108,8 +108,6 @@ jobs:
         $coreTotal = 0
         $windowsPassed = 0
         $windowsTotal = 0
-        $globalPassed = 0
-        $globalTotal = 0
 
         foreach ($file in $trxFiles) {
           Write-Host "Processing TRX: $($file.FullName)"
@@ -129,33 +127,42 @@ jobs:
             $filePassed += [int]$c.passed
           }
 
-          if ($isCoreTest -and !$isWindowsTest) {
+          if ($isCoreTest -and $isWindowsTest) {
+            Write-Error "CRITICAL: TRX file $($file.FullName) contains ambiguous markers identifying as both Core and WindowsIntegration tests!"
+            exit 1
+          }
+
+          if ($isCoreTest) {
             $coreTotal += $fileTotal
             $corePassed += $filePassed
             Write-Host " -> Identified as MahmoudAI.Core.Tests: $filePassed / $fileTotal passed"
-          } elseif ($isWindowsTest -and !$isCoreTest) {
+          } elseif ($isWindowsTest) {
             $windowsTotal += $fileTotal
             $windowsPassed += $filePassed
             Write-Host " -> Identified as MahmoudAI.WindowsIntegration.Tests: $filePassed / $fileTotal passed"
           } else {
-            $globalTotal += $fileTotal
-            $globalPassed += $filePassed
-            Write-Host " -> General / Aggregate suite: $filePassed / $fileTotal passed"
+            Write-Error "CRITICAL: TRX file $($file.FullName) does not match any recognized test assembly signature!"
+            exit 1
           }
         }
 
-        $finalCore = if ($coreTotal -gt 0) { $coreTotal } else { $globalTotal }
-        $finalCorePassed = if ($corePassed -gt 0) { $corePassed } else { $globalPassed }
-
         Write-Host "Summary Breakdown:"
-        Write-Host " - Core Tests: $finalCorePassed / $finalCore (Required >= 71)"
+        Write-Host " - Core Tests: $corePassed / $coreTotal (Required >= 71)"
         Write-Host " - WindowsIntegration Tests: $windowsPassed / $windowsTotal (Required >= 7)"
         
-        $totalTests = $finalCore + $windowsTotal
-        $totalPassed = $finalCorePassed + $windowsPassed
+        $totalTests = $coreTotal + $windowsTotal
+        $totalPassed = $corePassed + $windowsPassed
 
-        if ($finalCore -lt 71) {
-          Write-Error "CRITICAL: MahmoudAI.Core.Tests count ($finalCore) is below the minimum baseline of 71!"
+        if ($coreTotal -eq 0) {
+          Write-Error "CRITICAL: MahmoudAI.Core.Tests suite was not found or yielded 0 tests!"
+          exit 1
+        }
+        if ($windowsTotal -eq 0) {
+          Write-Error "CRITICAL: MahmoudAI.WindowsIntegration.Tests suite was not found or yielded 0 tests!"
+          exit 1
+        }
+        if ($coreTotal -lt 71) {
+          Write-Error "CRITICAL: MahmoudAI.Core.Tests count ($coreTotal) is below the minimum baseline of 71!"
           exit 1
         }
         if ($windowsTotal -lt 7) {
@@ -170,7 +177,7 @@ jobs:
           Write-Error "CRITICAL: Not all tests passed ($totalPassed / $totalTests)!"
           exit 1
         }
-        Write-Host "Assembly-specific TRX verification PASSED: Core ($finalCorePassed/$finalCore), WindowsIntegration ($windowsPassed/$windowsTotal), Total ($totalPassed/$totalTests)."
+        Write-Host "Strict assembly-specific TRX verification PASSED: Core ($corePassed/$coreTotal), WindowsIntegration ($windowsPassed/$windowsTotal), Total ($totalPassed/$totalTests)."
 
     - name: Upload Test Results
       if: always()
