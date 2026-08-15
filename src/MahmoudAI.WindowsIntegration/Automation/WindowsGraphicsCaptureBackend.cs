@@ -70,12 +70,9 @@ namespace MahmoudAI.WindowsIntegration.Automation
             GraphicsCaptureItem? item;
             try
             {
-                var interop = global::WinRT.MarshalInspectable<GraphicsCaptureItem>.FromAbi(IntPtr.Zero); // Or via IGraphicsCaptureItemInterop
-                var riid = typeof(GraphicsCaptureItem).GUID;
-                
-                // Direct activation factory & interop call
                 var factory = global::Windows.Foundation.ActivationFactory.GetActivationFactory<GraphicsCaptureItem>();
                 var captureInterop = (IGraphicsCaptureItemInterop)factory;
+                var riid = typeof(GraphicsCaptureItem).GUID;
                 captureInterop.CreateForWindow(hwnd, ref riid, out var result);
                 try
                 {
@@ -284,12 +281,12 @@ namespace MahmoudAI.WindowsIntegration.Automation
             status = ScreenCaptureStatus.NotFound;
             error = "Target window was not found.";
 
-            if (hwnd == IntPtr.Zero || !NativeMethods.IsWindow(hwnd) || !NativeMethods.IsWindowVisible(hwnd))
+            if (hwnd == IntPtr.Zero || !CaptureNativeMethods.IsWindow(hwnd) || !CaptureNativeMethods.IsWindowVisible(hwnd))
             {
                 return false;
             }
 
-            NativeMethods.GetWindowThreadProcessId(hwnd, out var actualProcessId);
+            CaptureNativeMethods.GetWindowThreadProcessId(hwnd, out var actualProcessId);
             if (actualProcessId != (uint)expectedProcessId)
             {
                 status = ScreenCaptureStatus.ProcessMismatch;
@@ -297,7 +294,7 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 return false;
             }
 
-            if (!NativeMethods.GetWindowRect(hwnd, out var bounds))
+            if (!CaptureNativeMethods.GetWindowRect(hwnd, out var bounds))
             {
                 status = ScreenCaptureStatus.NotFound;
                 error = "Target window bounds could not be resolved.";
@@ -314,7 +311,7 @@ namespace MahmoudAI.WindowsIntegration.Automation
             originX = bounds.Left;
             originY = bounds.Top;
 
-            var dpi = NativeMethods.GetDpiForWindow(hwnd);
+            var dpi = CaptureNativeMethods.GetDpiForWindow(hwnd);
             if (dpi > 0)
             {
                 dpiScaleX = dpi / 96.0f;
@@ -405,7 +402,7 @@ namespace MahmoudAI.WindowsIntegration.Automation
         }
     }
 
-    internal static class NativeMethods
+    internal static class CaptureNativeMethods
     {
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
