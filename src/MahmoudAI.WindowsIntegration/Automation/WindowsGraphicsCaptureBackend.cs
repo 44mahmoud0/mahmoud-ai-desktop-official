@@ -1,12 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 using MahmoudAI.Core.Automation;
 using Microsoft.Graphics.Canvas;
-using Windows.Foundation;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX;
 using Windows.Graphics.DirectX.Direct3D11;
@@ -70,7 +70,7 @@ namespace MahmoudAI.WindowsIntegration.Automation
             GraphicsCaptureItem? item;
             try
             {
-                var factory = global::Windows.Foundation.ActivationFactory.GetActivationFactory<GraphicsCaptureItem>();
+                var factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem).FullName!);
                 var captureInterop = (IGraphicsCaptureItemInterop)factory;
                 var riid = typeof(GraphicsCaptureItem).GUID;
                 captureInterop.CreateForWindow(hwnd, ref riid, out var result);
