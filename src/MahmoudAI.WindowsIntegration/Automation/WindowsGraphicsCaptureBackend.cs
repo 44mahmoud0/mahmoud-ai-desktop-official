@@ -48,6 +48,11 @@ namespace MahmoudAI.WindowsIntegration.Automation
             ArgumentNullException.ThrowIfNull(request);
             ThrowIfDisposed();
 
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Failure(ScreenCaptureStatus.Cancelled, "Screen capture was cancelled.");
+            }
+
             if (request.Target.Kind != ScreenCaptureTargetKind.Window
                 || request.Target.Hwnd is not nint hwnd
                 || hwnd == nint.Zero)
@@ -65,7 +70,10 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 return Failure(targetStatus, targetError);
             }
 
-            cancellationToken.ThrowIfCancellationRequested();
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Failure(ScreenCaptureStatus.Cancelled, "Screen capture was cancelled.");
+            }
 
             GraphicsCaptureItem? item;
             try
@@ -108,7 +116,12 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 itemSize);
 
             using var session = framePool.CreateCaptureSession(item);
-            session.IsCursorCaptureEnabled = request.IncludeCursor;
+            
+            // Guard IsCursorCaptureEnabled for Windows build >= 19041
+            if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+            {
+                session.IsCursorCaptureEnabled = request.IncludeCursor;
+            }
 
             using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
@@ -135,7 +148,10 @@ namespace MahmoudAI.WindowsIntegration.Automation
 
             using (frame)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return Failure(ScreenCaptureStatus.Cancelled, "Screen capture was cancelled.");
+                }
 
                 if (!TryValidateTarget(hwnd, expectedProcessId, out originX, out originY, out var dpiScaleX, out var dpiScaleY, out targetStatus, out targetError))
                 {
@@ -162,40 +178,86 @@ namespace MahmoudAI.WindowsIntegration.Automation
 
                 if (request.Region is ScreenCaptureRegion reqRegion)
                 {
-                    cropX = Math.Clamp(reqRegion.X, 0, srcWidth - 1);
-                    cropY = Math.Clamp(reqRegion.Y, 0, srcHeight - 1);
-                    cropWidth = Math.Clamp(reqRegion.Width, 1, srcWidth - cropX);
-                    cropHeight = Math.Clamp(reqRegion.Height, 1, srcHeight - cropY);
+                    if (reqRegion.Width <= 0 || reqRegion.Height <= 0)
+                    {
+                        return Failure(ScreenCaptureStatus.UnsupportedTarget, "Requested capture region has non-positive width or height.");
+                    }
+
+                    // Check if region is completely outside source
+                    if (reqRegion.X >= srcWidth || reqRegion.Y >= srcHeight || (reqRegion.X + reqRegion.Width) <= 0 || (reqRegion.Y + reqRegion.Height) <= 0)
+                    {
+                        return Failure(ScreenCaptureStatus.UnsupportedTarget, "Requested capture region is completely outside the source bounds.");
+                    }
+
+                    // Compute valid intersection
+                    int intersectX = Math.Max(0, reqRegion.X);
+                    int intersectY = Math.Max(0, reqRegion.Y);
+                    int intersectRight = Math.Min(srcWidth, reqRegion.X + reqRegion.Width);
+                    int intersectBottom = Math.Min(srcHeight, reqRegion.Y + reqRegion.Height);
+
+                    cropX = intersectX;
+                    cropY = intersectY;
+                    cropWidth = intersectRight - intersectX;
+                    cropHeight = intersectBottom - intersectY;
+
+                    if (cropWidth <= 0 || cropHeight <= 0)
+                    {
+                        return Failure(ScreenCaptureStatus.UnsupportedTarget, "Computed region intersection has non-positive dimensions.");
+                    }
                 }
 
-                int finalWidth = cropWidth;
-                int finalHeight = cropHeight;
+                // One-pass downscale computation
+                double scaleX = 1.0;
+                double scaleY = 1.0;
 
-                if (request.MaxWidth is int maxWidth && maxWidth > 0 && finalWidth > maxWidth)
+                if (request.MaxWidth is int mw && mw > 0 && cropWidth > mw)
                 {
-                    double ratio = (double)maxWidth / finalWidth;
-                    finalWidth = maxWidth;
-                    finalHeight = Math.Max(1, (int)(finalHeight * ratio));
+                    scaleX = (double)mw / cropWidth;
                 }
-
-                if (request.MaxHeight is int maxHeight && maxHeight > 0 && finalHeight > maxHeight)
+                if (request.MaxHeight is int mh && mh > 0 && cropHeight > mh)
                 {
-                    double ratio = (double)maxHeight / finalHeight;
-                    finalHeight = maxHeight;
-                    finalWidth = Math.Max(1, (int)(finalWidth * ratio));
+                    scaleY = (double)mh / cropHeight;
+                }
+                double scale = Math.Min(scaleX, scaleY);
+
+                int finalWidth = Math.Max(1, (int)Math.Round(cropWidth * scale));
+                int finalHeight = Math.Max(1, (int)Math.Round(cropHeight * scale));
+
+                // Buffer geometry safety check
+                long expectedSourceBytes;
+                try
+                {
+                    expectedSourceBytes = checked((long)srcWidth * srcHeight * bytesPerPixel);
+                }
+                catch (OverflowException)
+                {
+                    return Failure(ScreenCaptureStatus.ProviderError, "Source buffer geometry arithmetic overflow.");
                 }
 
-                var processedBytes = ExtractAndProcessRegion(
-                    pixelBytes,
-                    srcWidth,
-                    srcHeight,
-                    cropX,
-                    cropY,
-                    cropWidth,
-                    cropHeight,
-                    finalWidth,
-                    finalHeight,
-                    bytesPerPixel);
+                if (pixelBytes.Length < expectedSourceBytes)
+                {
+                    return Failure(ScreenCaptureStatus.ProviderError, "Captured pixel buffer length is less than expected source geometry.");
+                }
+
+                byte[] processedBytes;
+                try
+                {
+                    processedBytes = ExtractAndProcessRegion(
+                        pixelBytes,
+                        srcWidth,
+                        srcHeight,
+                        cropX,
+                        cropY,
+                        cropWidth,
+                        cropHeight,
+                        finalWidth,
+                        finalHeight,
+                        bytesPerPixel);
+                }
+                catch (Exception ex)
+                {
+                    return Failure(ScreenCaptureStatus.ProviderError, $"Region extraction and processing failed: {ex.Message}");
+                }
 
                 int stride = checked(finalWidth * bytesPerPixel);
                 var frameId = Guid.NewGuid().ToString("N");
@@ -235,26 +297,45 @@ namespace MahmoudAI.WindowsIntegration.Automation
             CancellationToken cancellationToken)
         {
             var tcs = new TaskCompletionSource<Direct3D11CaptureFrame>(TaskCreationOptions.RunContinuationsAsynchronously);
+            CancellationTokenRegistration reg = default;
 
-            framePool.FrameArrived += (sender, args) =>
+            void OnFrameArrived(Direct3D11CaptureFramePool sender, object args)
             {
                 try
                 {
                     var frame = sender.TryGetNextFrame();
                     if (frame != null)
                     {
-                        tcs.TrySetResult(frame);
+                        if (tcs.TrySetResult(frame))
+                        {
+                            framePool.FrameArrived -= OnFrameArrived;
+                            reg.Dispose();
+                        }
+                        else
+                        {
+                            frame.Dispose();
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    tcs.TrySetException(ex);
+                    if (tcs.TrySetException(ex))
+                    {
+                        framePool.FrameArrived -= OnFrameArrived;
+                        reg.Dispose();
+                    }
                 }
-            };
+            }
 
-            cancellationToken.Register(() =>
+            framePool.FrameArrived += OnFrameArrived;
+
+            reg = cancellationToken.Register(() =>
             {
-                tcs.TrySetCanceled(cancellationToken);
+                if (tcs.TrySetCanceled(cancellationToken))
+                {
+                    framePool.FrameArrived -= OnFrameArrived;
+                    reg.Dispose();
+                }
             });
 
             return tcs.Task;
@@ -282,7 +363,15 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 return false;
             }
 
-            CaptureNativeMethods.GetWindowThreadProcessId(hwnd, out var actualProcessId);
+            uint actualProcessId = 0;
+            uint pidResult = CaptureNativeMethods.GetWindowThreadProcessId(hwnd, out actualProcessId);
+            if (pidResult == 0)
+            {
+                status = ScreenCaptureStatus.ProcessMismatch;
+                error = "Failed to retrieve process ID for target window.";
+                return false;
+            }
+
             if (actualProcessId != (uint)expectedProcessId)
             {
                 status = ScreenCaptureStatus.ProcessMismatch;
