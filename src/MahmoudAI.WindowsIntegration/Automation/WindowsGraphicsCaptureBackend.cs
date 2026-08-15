@@ -178,27 +178,45 @@ namespace MahmoudAI.WindowsIntegration.Automation
 
                 if (request.Region is ScreenCaptureRegion reqRegion)
                 {
-                    if (reqRegion.Width <= 0 || reqRegion.Height <= 0)
+                    long requestedLeft = reqRegion.X;
+                    long requestedTop = reqRegion.Y;
+                    long requestedRight;
+                    long requestedBottom;
+
+                    try
                     {
-                        return Failure(ScreenCaptureStatus.UnsupportedTarget, "Requested capture region has non-positive width or height.");
+                        requestedRight = checked((long)reqRegion.X + reqRegion.Width);
+                        requestedBottom = checked((long)reqRegion.Y + reqRegion.Height);
+                    }
+                    catch (OverflowException)
+                    {
+                        return Failure(ScreenCaptureStatus.UnsupportedTarget, "Requested capture region coordinate arithmetic overflow.");
                     }
 
-                    // Check if region is completely outside source
-                    if (reqRegion.X >= srcWidth || reqRegion.Y >= srcHeight || (reqRegion.X + reqRegion.Width) <= 0 || (reqRegion.Y + reqRegion.Height) <= 0)
+                    long sourceRight = srcWidth;
+                    long sourceBottom = srcHeight;
+
+                    long intersectLeft = Math.Max(0L, requestedLeft);
+                    long intersectTop = Math.Max(0L, requestedTop);
+                    long intersectRight = Math.Min(sourceRight, requestedRight);
+                    long intersectBottom = Math.Min(sourceBottom, requestedBottom);
+
+                    if (intersectRight <= intersectLeft || intersectBottom <= intersectTop)
                     {
-                        return Failure(ScreenCaptureStatus.UnsupportedTarget, "Requested capture region is completely outside the source bounds.");
+                        return Failure(ScreenCaptureStatus.UnsupportedTarget, "Requested capture region does not intersect the source window.");
                     }
 
-                    // Compute valid intersection
-                    int intersectX = Math.Max(0, reqRegion.X);
-                    int intersectY = Math.Max(0, reqRegion.Y);
-                    int intersectRight = Math.Min(srcWidth, reqRegion.X + reqRegion.Width);
-                    int intersectBottom = Math.Min(srcHeight, reqRegion.Y + reqRegion.Height);
-
-                    cropX = intersectX;
-                    cropY = intersectY;
-                    cropWidth = intersectRight - intersectX;
-                    cropHeight = intersectBottom - intersectY;
+                    try
+                    {
+                        cropX = checked((int)intersectLeft);
+                        cropY = checked((int)intersectTop);
+                        cropWidth = checked((int)(intersectRight - intersectLeft));
+                        cropHeight = checked((int)(intersectBottom - intersectTop));
+                    }
+                    catch (OverflowException)
+                    {
+                        return Failure(ScreenCaptureStatus.UnsupportedTarget, "Computed region intersection coordinate overflow.");
+                    }
 
                     if (cropWidth <= 0 || cropHeight <= 0)
                     {
@@ -292,53 +310,51 @@ namespace MahmoudAI.WindowsIntegration.Automation
             }
         }
 
-        private static Task<Direct3D11CaptureFrame> WaitForFrameAsync(
+        private static async Task<Direct3D11CaptureFrame> WaitForFrameAsync(
             Direct3D11CaptureFramePool framePool,
             CancellationToken cancellationToken)
         {
             var tcs = new TaskCompletionSource<Direct3D11CaptureFrame>(TaskCreationOptions.RunContinuationsAsynchronously);
-            CancellationTokenRegistration reg = default;
 
             void OnFrameArrived(Direct3D11CaptureFramePool sender, object args)
             {
+                Direct3D11CaptureFrame? frame = null;
                 try
                 {
-                    var frame = sender.TryGetNextFrame();
-                    if (frame != null)
+                    frame = sender.TryGetNextFrame();
+                    if (frame is null)
+                        return;
+
+                    if (tcs.TrySetResult(frame))
                     {
-                        if (tcs.TrySetResult(frame))
-                        {
-                            framePool.FrameArrived -= OnFrameArrived;
-                            reg.Dispose();
-                        }
-                        else
-                        {
-                            frame.Dispose();
-                        }
+                        frame = null; // ownership transferred
                     }
                 }
                 catch (Exception ex)
                 {
-                    if (tcs.TrySetException(ex))
-                    {
-                        framePool.FrameArrived -= OnFrameArrived;
-                        reg.Dispose();
-                    }
+                    tcs.TrySetException(ex);
+                }
+                finally
+                {
+                    frame?.Dispose();
                 }
             }
 
             framePool.FrameArrived += OnFrameArrived;
 
-            reg = cancellationToken.Register(() =>
+            using var registration = cancellationToken.Register(() =>
             {
-                if (tcs.TrySetCanceled(cancellationToken))
-                {
-                    framePool.FrameArrived -= OnFrameArrived;
-                    reg.Dispose();
-                }
+                tcs.TrySetCanceled(cancellationToken);
             });
 
-            return tcs.Task;
+            try
+            {
+                return await tcs.Task.ConfigureAwait(false);
+            }
+            finally
+            {
+                framePool.FrameArrived -= OnFrameArrived;
+            }
         }
 
         private static bool TryValidateTarget(
