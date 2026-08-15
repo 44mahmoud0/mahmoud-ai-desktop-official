@@ -1,12 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 using MahmoudAI.Core.Automation;
 using Microsoft.Graphics.Canvas;
+using WinRT;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX;
 using Windows.Graphics.DirectX.Direct3D11;
@@ -70,10 +70,9 @@ namespace MahmoudAI.WindowsIntegration.Automation
             GraphicsCaptureItem? item;
             try
             {
-                var factory = WindowsRuntimeMarshal.GetActivationFactory(typeof(GraphicsCaptureItem).FullName!);
-                var captureInterop = (IGraphicsCaptureItemInterop)factory;
+                var interop = GraphicsCaptureItem.As<IGraphicsCaptureItemInterop>();
                 var riid = typeof(GraphicsCaptureItem).GUID;
-                captureInterop.CreateForWindow(hwnd, ref riid, out var result);
+                interop.CreateForWindow(hwnd, ref riid, out var result);
                 try
                 {
                     item = Marshal.GetObjectForIUnknown(result) as GraphicsCaptureItem;
@@ -237,7 +236,7 @@ namespace MahmoudAI.WindowsIntegration.Automation
         {
             var tcs = new TaskCompletionSource<Direct3D11CaptureFrame>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            TypedEventHandler<Direct3D11CaptureFramePool, object> handler = (sender, args) =>
+            framePool.FrameArrived += (sender, args) =>
             {
                 try
                 {
@@ -253,11 +252,8 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 }
             };
 
-            framePool.FrameArrived += handler;
-
             cancellationToken.Register(() =>
             {
-                framePool.FrameArrived -= handler;
                 tcs.TrySetCanceled(cancellationToken);
             });
 
