@@ -1,0 +1,69 @@
+
+[0;31mX[0m [0;1;39mfix/wgc-v1-2-2-real-e2e[0m MahmoudAI Quality Gate & CI 44mahmoud0/mahmoud-ai-desktop-official#7 · [0;36m31874888746[0m
+Triggered via pull_request about 7 minutes ago
+
+[0;1;39mJOBS[0m
+[0;31mX[0m [0;1;39mbuild-and-test[0m in 2m1s (ID [0;36m94989032670[0m)
+  [0;32m✓[0m Set up job
+  [0;32m✓[0m Checkout Repository
+  [0;32m✓[0m Print Identity and Context Proof
+  [0;32m✓[0m Setup .NET SDK
+  [0;32m✓[0m Preflight Solution and Project Assertion (Anti-False-Green V4)
+  [0;32m✓[0m Restore Dependencies
+  [0;31mX[0m Build Solution (Release)
+  [38;5;242m-[0m Run Test Suite (Release)
+  [38;5;242m-[0m Verify Test Results (Strict V1.2.2 Behavioral Closure Gate)
+  [0;31mX[0m Upload Test Results
+  [38;5;242m-[0m Post Setup .NET SDK
+  [0;32m✓[0m Post Checkout Repository
+  [0;32m✓[0m Complete job
+
+[0;1;39mANNOTATIONS[0m
+[0;33m![0m Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-dotnet@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+[38;5;242mbuild-and-test: .github#8
+[0m
+[0;31mX[0m No files were found with the provided path: **/*.trx. No artifacts will be uploaded.
+[38;5;242mbuild-and-test: .github#15
+[0m
+[0;31mX[0m Process completed with exit code 1.
+[38;5;242mbuild-and-test: .github#425
+[0m
+[0;31mX[0m The type or namespace name 'DispatcherQueueSynchronizationContext' could not be found (are you missing a using directive or an assembly reference?)
+[38;5;242mbuild-and-test: tests/MahmoudAI.WindowsIntegration.TestHost/App.xaml.cs#19
+[0m
+[0;33m![0m For improved performance, use the LoggerMessage delegates instead of calling 'LoggerExtensions.LogInformation(ILogger, string?, params object?[])' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1848)
+[38;5;242mbuild-and-test: src/MahmoudAI.Core/Teamwork/ExpandedAgentTeam.cs#64
+[0m
+[0;33m![0m For improved performance, use the LoggerMessage delegates instead of calling 'LoggerExtensions.LogInformation(ILogger, string?, params object?[])' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1848)
+[38;5;242mbuild-and-test: src/MahmoudAI.Core/Teamwork/ExpandedAgentTeam.cs#60
+[0m
+[0;33m![0m For improved performance, use the LoggerMessage delegates instead of calling 'LoggerExtensions.LogInformation(ILogger, string?, params object?[])' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1848)
+[38;5;242mbuild-and-test: src/MahmoudAI.Core/Teamwork/ExpandedAgentTeam.cs#56
+[0m
+[0;33m![0m For improved performance, use the LoggerMessage delegates instead of calling 'LoggerExtensions.LogWarning(ILogger, string?, params object?[])' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1848)
+[38;5;242mbuild-and-test: src/MahmoudAI.Core/Automation/WindowsAutomationEngine.cs#30
+[0m
+[0;33m![0m For improved performance, use the LoggerMessage delegates instead of calling 'LoggerExtensions.LogInformation(ILogger, string?, params object?[])' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1848)
+[38;5;242mbuild-and-test: src/MahmoudAI.Core/Teamwork/ExpandedAgentTeam.cs#53
+[0m
+[0;33m![0m Member 'SafeModeActive' is explicitly initialized to its default value (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1805)
+[38;5;242mbuild-and-test: src/MahmoudAI.Core/Security/PermissionBroker.cs#25
+[0m
+[0;33m![0m Member 'EmergencyStopTriggered' is explicitly initialized to its default value (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1805)
+[38;5;242mbuild-and-test: src/MahmoudAI.Core/Security/PermissionBroker.cs#24
+[0m
+[0;33m![0m Identifier 'Pointer' contains type name (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1720)
+[38;5;242mbuild-and-test: src/MahmoudAI.Core/Integration/IntegrationContracts.cs#61
+[0m
+[0;33m![0m Member 'MaxRetries' is explicitly initialized to its default value (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1805)
+[38;5;242mbuild-and-test: src/MahmoudAI.Core/Engine/TaskGraphEngine.cs#27
+[0m
+[0;33m![0m Main creates a new instance of App which is never used. Pass the instance as an argument to another method, assign the instance to a variable, or remove the object creation if it is unnecessary. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1806)
+[38;5;242mbuild-and-test: tests/MahmoudAI.WindowsIntegration.TestHost/App.xaml.cs#22
+[0m
+[0;31mX[0m The type or namespace name 'DispatcherQueueSynchronizationContext' could not be found (are you missing a using directive or an assembly reference?)
+[38;5;242mbuild-and-test: tests/MahmoudAI.WindowsIntegration.TestHost/App.xaml.cs#19
+[0m
+
+To see what failed, try: gh run view 31874888746 --log-failed
+[38;5;242mView this run on GitHub: https://github.com/44mahmoud0/mahmoud-ai-desktop-official/actions/runs/31874888746[0m
