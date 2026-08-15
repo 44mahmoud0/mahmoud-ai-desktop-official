@@ -48,6 +48,11 @@ namespace MahmoudAI.WindowsIntegration.Automation
             ArgumentNullException.ThrowIfNull(request);
             ThrowIfDisposed();
 
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Failure(ScreenCaptureStatus.Cancelled, "Screen capture was cancelled.");
+            }
+
             if (request.Target.Kind != ScreenCaptureTargetKind.Window
                 || request.Target.Hwnd is not nint hwnd
                 || hwnd == nint.Zero)
