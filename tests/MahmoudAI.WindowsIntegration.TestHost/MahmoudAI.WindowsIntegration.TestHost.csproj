@@ -11,7 +11,7 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
     <EnableMsixTooling>false</EnableMsixTooling>
-    <DisableWinUIXamlCompilerTask>true</DisableWinUIXamlCompilerTask>
+    <DisableWinUIXamlCompilerTask>false</DisableWinUIXamlCompilerTask>
     <PlatformTarget>x64</PlatformTarget>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <SelfContained>true</SelfContained>

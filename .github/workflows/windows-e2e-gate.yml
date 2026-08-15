@@ -1,0 +1,60 @@
+name: MahmoudAI Windows E2E Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  windows-e2e:
+    name: Windows Behavioral E2E (Interactive)
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - InteractiveDesktop
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore Dependencies
+      run: dotnet restore MahmoudAI.sln /p:MahmoudAIUnpackagedCiBuild=true
+
+    - name: Build Solution (Release)
+      run: dotnet build MahmoudAI.sln --configuration Release --no-restore /p:MahmoudAIUnpackagedCiBuild=true
+
+    - name: Run Windows E2E Tests
+      run: dotnet test MahmoudAI.sln --configuration Release --no-build --filter "Category=WindowsE2E" --verbosity normal --logger "trx;LogFileName=e2e_results.trx" /p:MahmoudAIUnpackagedCiBuild=true
+
+    - name: Verify E2E Results
+      shell: pwsh
+      run: |
+        $trxFiles = Get-ChildItem -Recurse -Filter "e2e_results.trx"
+        if ($trxFiles.Count -eq 0) {
+          Write-Error "CRITICAL: No E2E TRX file generated!"
+          exit 1
+        }
+        [xml]$xml = Get-Content $trxFiles[0].FullName
+        $ns = New-Object System.Xml.XmlNamespaceManager($xml.NameTable)
+        $ns.AddNamespace("t", "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")
+        
+        $results = $xml.SelectNodes("//t:UnitTestResult", $ns)
+        $passed = 0
+        $total = 0
+        foreach ($res in $results) {
+            $total++
+            if ($res.outcome -eq "Passed") { $passed++ }
+        }
+        
+        Write-Host "E2E Results: $passed / $total passed"
+        if ($passed -lt $total -or $total -lt 5) {
+            Write-Error "CRITICAL: E2E tests failed or incomplete!"
+            exit 1
+        }
+        Write-Host "VERIFIED WINDOWS E2E SUCCESSFUL."
