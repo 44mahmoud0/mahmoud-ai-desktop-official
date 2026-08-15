@@ -6,14 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MahmoudAI.Core.Automation;
 using Microsoft.Graphics.Canvas;
-using WinRT;
 using Windows.Foundation;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX;
 using Windows.Graphics.DirectX.Direct3D11;
 using Windows.Win32;
 using Windows.Win32.Foundation;
-using Windows.Win32.System.WinRT.Graphics.Capture;
 
 namespace MahmoudAI.WindowsIntegration.Automation
 {
@@ -23,6 +21,17 @@ namespace MahmoudAI.WindowsIntegration.Automation
         private const int FrameBufferCount = 2;
         private readonly CanvasDevice _device;
         private int _disposed;
+
+        [ComImport]
+        [Guid("36287B57-CB54-4B99-83B8-8143F75b49ef")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        private interface IGraphicsCaptureItemInterop
+        {
+            void CreateForWindow(
+                [In] IntPtr window,
+                [In] ref Guid riid,
+                [Out] out IntPtr result);
+        }
 
         public WindowsGraphicsCaptureBackend()
         {
@@ -63,8 +72,21 @@ namespace MahmoudAI.WindowsIntegration.Automation
             GraphicsCaptureItem? item;
             try
             {
-                var interop = GraphicsCaptureItem.As<IGraphicsCaptureItemInterop>();
-                interop.CreateForWindow((HWND)hwnd, out item);
+                var factory = Marshal.GetActivationFactory(typeof(GraphicsCaptureItem));
+                var interop = (IGraphicsCaptureItemInterop)factory;
+                var riid = typeof(GraphicsCaptureItem).GUID;
+                interop.CreateForWindow(hwnd, ref riid, out var result);
+                try
+                {
+                    item = Marshal.GetObjectForIUnknown(result) as GraphicsCaptureItem;
+                }
+                finally
+                {
+                    if (result != IntPtr.Zero)
+                    {
+                        Marshal.Release(result);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -374,7 +396,7 @@ namespace MahmoudAI.WindowsIntegration.Automation
 
         private void ThrowIfDisposed()
         {
-            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
+            ObjectDisposedException.ThrowIf(_disposed == 1, this);
         }
 
         private static CapturedScreenFrame Failure(ScreenCaptureStatus status, string error)
