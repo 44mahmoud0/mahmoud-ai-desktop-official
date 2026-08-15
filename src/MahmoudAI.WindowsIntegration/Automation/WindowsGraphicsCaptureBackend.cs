@@ -1,34 +1,28 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 using MahmoudAI.Core.Automation;
 using Microsoft.Graphics.Canvas;
+using WinRT;
+using Windows.Foundation;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX;
 using Windows.Graphics.DirectX.Direct3D11;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using Windows.Win32.System.WinRT.Graphics.Capture;
 
 namespace MahmoudAI.WindowsIntegration.Automation
 {
     [SupportedOSPlatform("windows10.0.17763.0")]
     internal sealed class WindowsGraphicsCaptureBackend : IScreenCaptureBackend, IDisposable
     {
+        private const int FrameBufferCount = 2;
         private readonly CanvasDevice _device;
         private int _disposed;
-
-        [ComImport]
-        [Guid("36287B57-CB54-4B99-83B8-8143F75b49ef")]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        private interface IGraphicsCaptureItemInterop
-        {
-            IntPtr CreateForWindow(
-                [In] IntPtr window,
-                [In] ref Guid riid,
-                [Out] out IntPtr result);
-        }
 
         public WindowsGraphicsCaptureBackend()
         {
@@ -51,7 +45,7 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 || request.Target.Hwnd is not nint hwnd
                 || hwnd == nint.Zero)
             {
-                return Failure(ScreenCaptureStatus.UnsupportedTarget, "Screen Capture supports only non-zero window HWND target.");
+                return Failure(ScreenCaptureStatus.UnsupportedTarget, "Screen Capture supports only a non-zero window HWND target.");
             }
 
             if (request.Target.ProcessId is not int expectedProcessId || expectedProcessId <= 0)
@@ -59,223 +53,195 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 return Failure(ScreenCaptureStatus.ProcessMismatch, "Screen Capture requires an explicit positive target process ID.");
             }
 
-            cancellationToken.ThrowIfCancellationRequested();
-
-            // Gate 4: Pre-capture target identity validation
-            if (!TryValidateTarget(hwnd, expectedProcessId, out var originX, out var originY, out var dpiScaleX, out var dpiScaleY, out var status, out var error, out var windowWidth, out var windowHeight))
+            if (!TryValidateTarget(hwnd, expectedProcessId, out var originX, out var originY, out _, out _, out var targetStatus, out var targetError))
             {
-                return Failure(status, error);
+                return Failure(targetStatus, targetError);
             }
 
-            GraphicsCaptureItem item;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            GraphicsCaptureItem? item;
             try
             {
-                item = CreateCaptureItemForWindow(hwnd);
-                if (item == null || item.Size.Width <= 0 || item.Size.Height <= 0)
-                {
-                    return Failure(ScreenCaptureStatus.NotFound, "Failed to create a valid GraphicsCaptureItem for the specified window.");
-                }
+                var interop = GraphicsCaptureItem.As<IGraphicsCaptureItemInterop>();
+                interop.CreateForWindow((HWND)hwnd, out item);
             }
             catch (Exception ex)
             {
-                return Failure(ScreenCaptureStatus.ProviderError, $"Failed to initialize capture item: {ex.Message}");
+                return Failure(ScreenCaptureStatus.ProviderError, $"GraphicsCaptureItem creation failed: {ex.Message}");
             }
 
-            var sourceWidth = item.Size.Width;
-            var sourceHeight = item.Size.Height;
+            if (item is null)
+            {
+                return Failure(ScreenCaptureStatus.NotFound, "Windows.Graphics.Capture could not create an item for the target window.");
+            }
 
-            Direct3D11CaptureFramePool framePool = null;
-            GraphicsCaptureSession session = null;
-            Direct3D11CaptureFrame capturedFrame = null;
+            var itemSize = item.Size;
+            if (itemSize.Width <= 0 || itemSize.Height <= 0)
+            {
+                return Failure(ScreenCaptureStatus.NotFound, "Target window has zero or negative capture dimensions.");
+            }
 
+            using var framePool = Direct3D11CaptureFramePool.CreateFreeThreaded(
+                _device,
+                DirectXPixelFormat.B8G8R8A8UIntNormalized,
+                FrameBufferCount,
+                itemSize);
+
+            using var session = framePool.CreateCaptureSession(item);
+            session.IsCursorCaptureEnabled = request.IncludeCursor;
+
+            using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
+
+            Direct3D11CaptureFrame frame;
             try
             {
-                framePool = Direct3D11CaptureFramePool.CreateFreeThreaded(
-                    _device,
-                    DirectXPixelFormat.B8G8R8A8UIntNormalized,
-                    2,
-                    item.Size);
-
-                session = framePool.CreateCaptureSession(item);
-
-                var frameTcs = new TaskCompletionSource<Direct3D11CaptureFrame>(TaskCreationOptions.RunContinuationsAsynchronously);
-                
-                TypedEventHandler<Direct3D11CaptureFramePool, object> handler = (sender, args) =>
-                {
-                    try
-                    {
-                        var frame = sender.TryGetNextFrame();
-                        if (frame != null)
-                        {
-                            frameTcs.TrySetResult(frame);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        frameTcs.TrySetException(ex);
-                    }
-                };
-
-                framePool.FrameArrived += handler;
-
-                try
-                {
-                    session.StartCapture();
-
-                    using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-                    using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
-
-                    using (linkedCts.Token.Register(() => frameTcs.TrySetCanceled(linkedCts.Token)))
-                    {
-                        capturedFrame = await frameTcs.Task.ConfigureAwait(false);
-                    }
-                }
-                finally
-                {
-                    framePool.FrameArrived -= handler;
-                    try { session.Dispose(); } catch { }
-                    try { framePool.Dispose(); } catch { }
-                }
-
-                if (capturedFrame == null)
-                {
-                    return Failure(ScreenCaptureStatus.Timeout, "Capture frame acquisition timed out or returned null.");
-                }
-
-                // Gate 4: Post-capture target identity validation
-                if (!TryValidateTarget(hwnd, expectedProcessId, out _, out _, out _, out _, out var postStatus, out var postError, out _, out _))
-                {
-                    capturedFrame.Dispose();
-                    return Failure(postStatus, $"Post-capture validation failed: {postError}");
-                }
-
-                using (capturedFrame)
-                {
-                    var contentSize = capturedFrame.ContentSize;
-                    if (contentSize.Width <= 0 || contentSize.Height <= 0)
-                    {
-                        return Failure(ScreenCaptureStatus.ProviderError, "Captured frame has invalid dimensions.");
-                    }
-
-                    using var canvasBitmap = CanvasBitmap.CreateFromDirect3D11Surface(_device, capturedFrame.Surface);
-                    var pixelBytes = canvasBitmap.GetPixelBytes();
-
-                    int srcWidth = contentSize.Width;
-                    int srcHeight = contentSize.Height;
-                    int bytesPerPixel = 4;
-
-                    // Gate 8: Crop handling relative to source window
-                    int cropX = 0;
-                    int cropY = 0;
-                    int cropWidth = srcWidth;
-                    int cropHeight = srcHeight;
-
-                    if (request.Region is ScreenRect reqRegion)
-                    {
-                        cropX = Math.Clamp(reqRegion.X, 0, srcWidth - 1);
-                        cropY = Math.Clamp(reqRegion.Y, 0, srcHeight - 1);
-                        cropWidth = Math.Clamp(reqRegion.Width, 1, srcWidth - cropX);
-                        cropHeight = Math.Clamp(reqRegion.Height, 1, srcHeight - cropY);
-                    }
-
-                    // Gate 9: Downscale handling
-                    int finalWidth = cropWidth;
-                    int finalHeight = cropHeight;
-
-                    if (request.MaxWidth is int maxWidth && maxWidth > 0 && finalWidth > maxWidth)
-                    {
-                        double ratio = (double)maxWidth / finalWidth;
-                        finalWidth = maxWidth;
-                        finalHeight = Math.Max(1, (int)(finalHeight * ratio));
-                    }
-
-                    if (request.MaxHeight is int maxHeight && maxHeight > 0 && finalHeight > maxHeight)
-                    {
-                        double ratio = (double)maxHeight / finalHeight;
-                        finalHeight = maxHeight;
-                        finalWidth = Math.Max(1, (int)(finalWidth * ratio));
-                    }
-
-                    var processedBytes = ExtractAndProcessRegion(
-                        pixelBytes,
-                        srcWidth,
-                        srcHeight,
-                        cropX,
-                        cropY,
-                        cropWidth,
-                        cropHeight,
-                        finalWidth,
-                        finalHeight,
-                        bytesPerPixel);
-
-                    int stride = checked(finalWidth * bytesPerPixel);
-                    var frameId = Guid.NewGuid().ToString("N");
-                    var timestamp = DateTimeOffset.UtcNow;
-
-                    var metadata = new ScreenFrameMetadata(
-                        frameId,
-                        timestamp,
-                        finalWidth,
-                        finalHeight,
-                        stride,
-                        dpiScaleX,
-                        dpiScaleY,
-                        originX,
-                        originY,
-                        expectedProcessId,
-                        hwnd);
-
-                    var actualRegionPx = new ScreenRect(cropX, cropY, cropWidth, cropHeight);
-                    var transform = WindowsGraphicsCaptureBackendTransformExtensions.CreateAuthoritativeTransform(
-                        metadata,
-                        windowWidth,
-                        windowHeight,
-                        actualRegionPx);
-
-                    return new CapturedScreenFrame(
-                        ScreenCaptureStatus.Captured,
-                        metadata,
-                        processedBytes,
-                        transform,
-                        null);
-                }
+                var frameTask = WaitForFrameAsync(framePool, linkedCts.Token);
+                session.StartCapture();
+                frame = await frameTask.ConfigureAwait(false);
             }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            catch (OperationCanceledException) when (timeoutCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
             {
-                return Failure(ScreenCaptureStatus.Cancelled, "Screen capture was cancelled by caller.");
+                return Failure(ScreenCaptureStatus.Timeout, "Windows.Graphics.Capture frame acquisition timed out after 5 seconds.");
             }
             catch (OperationCanceledException)
             {
-                return Failure(ScreenCaptureStatus.Timeout, "Screen capture timed out.");
+                return Failure(ScreenCaptureStatus.Cancelled, "Screen capture was cancelled.");
             }
             catch (Exception ex)
             {
-                return Failure(ScreenCaptureStatus.ProviderError, ex.Message);
+                return Failure(ScreenCaptureStatus.ProviderError, $"Frame capture failed: {ex.Message}");
+            }
+
+            using (frame)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (!TryValidateTarget(hwnd, expectedProcessId, out originX, out originY, out var dpiScaleX, out var dpiScaleY, out targetStatus, out targetError))
+                {
+                    return Failure(targetStatus, targetError);
+                }
+
+                var contentSize = frame.ContentSize;
+                if (contentSize.Width <= 0 || contentSize.Height <= 0)
+                {
+                    return Failure(ScreenCaptureStatus.ProviderError, "Captured frame has invalid dimensions.");
+                }
+
+                using var canvasBitmap = CanvasBitmap.CreateFromDirect3D11Surface(_device, frame.Surface);
+                var pixelBytes = canvasBitmap.GetPixelBytes();
+
+                int srcWidth = contentSize.Width;
+                int srcHeight = contentSize.Height;
+                int bytesPerPixel = 4;
+
+                int cropX = 0;
+                int cropY = 0;
+                int cropWidth = srcWidth;
+                int cropHeight = srcHeight;
+
+                if (request.Region is ScreenCaptureRegion reqRegion)
+                {
+                    cropX = Math.Clamp(reqRegion.X, 0, srcWidth - 1);
+                    cropY = Math.Clamp(reqRegion.Y, 0, srcHeight - 1);
+                    cropWidth = Math.Clamp(reqRegion.Width, 1, srcWidth - cropX);
+                    cropHeight = Math.Clamp(reqRegion.Height, 1, srcHeight - cropY);
+                }
+
+                int finalWidth = cropWidth;
+                int finalHeight = cropHeight;
+
+                if (request.MaxWidth is int maxWidth && maxWidth > 0 && finalWidth > maxWidth)
+                {
+                    double ratio = (double)maxWidth / finalWidth;
+                    finalWidth = maxWidth;
+                    finalHeight = Math.Max(1, (int)(finalHeight * ratio));
+                }
+
+                if (request.MaxHeight is int maxHeight && maxHeight > 0 && finalHeight > maxHeight)
+                {
+                    double ratio = (double)maxHeight / finalHeight;
+                    finalHeight = maxHeight;
+                    finalWidth = Math.Max(1, (int)(finalWidth * ratio));
+                }
+
+                var processedBytes = ExtractAndProcessRegion(
+                    pixelBytes,
+                    srcWidth,
+                    srcHeight,
+                    cropX,
+                    cropY,
+                    cropWidth,
+                    cropHeight,
+                    finalWidth,
+                    finalHeight,
+                    bytesPerPixel);
+
+                int stride = checked(finalWidth * bytesPerPixel);
+                var frameId = Guid.NewGuid().ToString("N");
+                var timestamp = DateTimeOffset.UtcNow;
+
+                var metadata = new ScreenFrameMetadata(
+                    frameId,
+                    timestamp,
+                    finalWidth,
+                    finalHeight,
+                    stride,
+                    dpiScaleX,
+                    dpiScaleY,
+                    originX,
+                    originY,
+                    expectedProcessId,
+                    hwnd);
+
+                var actualRegionPx = new ScreenRect(cropX, cropY, cropWidth, cropHeight);
+                var transform = WindowsGraphicsCaptureBackendTransformExtensions.CreateAuthoritativeTransform(
+                    metadata,
+                    srcWidth,
+                    srcHeight,
+                    actualRegionPx);
+
+                return new CapturedScreenFrame(
+                    ScreenCaptureStatus.Captured,
+                    metadata,
+                    processedBytes,
+                    transform,
+                    null);
             }
         }
 
-        private static GraphicsCaptureItem CreateCaptureItemForWindow(IntPtr hwnd)
+        private static Task<Direct3D11CaptureFrame> WaitForFrameAsync(
+            Direct3D11CaptureFramePool framePool,
+            CancellationToken cancellationToken)
         {
-            var interop = (IGraphicsCaptureItemInterop)Marshal.GetComObjectForData(
-                typeof(IGraphicsCaptureItemInterop).GUID,
-                typeof(GraphicsCaptureItem)); // fallback via activation factory if needed
+            var tcs = new TaskCompletionSource<Direct3D11CaptureFrame>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            // Using direct interop activation
-            var factory = Windows.Foundation.ActivationFactory.GetActivationFactory<GraphicsCaptureItem>();
-            var interopFactory = (IGraphicsCaptureItemInterop)factory;
-            var riid = typeof(GraphicsCaptureItem).GUID;
-            interopFactory.CreateForWindow(hwnd, ref riid, out var result);
-            try
+            TypedEventHandler<Direct3D11CaptureFramePool, object> handler = (sender, args) =>
             {
-                return Marshal.GetObjectForIUnknown(result) as GraphicsCaptureItem;
-            }
-            finally
-            {
-                if (result != IntPtr.Zero)
+                try
                 {
-                    Marshal.Release(result);
+                    var frame = sender.TryGetNextFrame();
+                    if (frame != null)
+                    {
+                        tcs.TrySetResult(frame);
+                    }
                 }
-            }
+                catch (Exception ex)
+                {
+                    tcs.TrySetException(ex);
+                }
+            };
+
+            framePool.FrameArrived += handler;
+
+            cancellationToken.Register(() =>
+            {
+                framePool.FrameArrived -= handler;
+                tcs.TrySetCanceled(cancellationToken);
+            });
+
+            return tcs.Task;
         }
 
         private static bool TryValidateTarget(
@@ -286,16 +252,12 @@ namespace MahmoudAI.WindowsIntegration.Automation
             out float dpiScaleX,
             out float dpiScaleY,
             out ScreenCaptureStatus status,
-            out string error,
-            out int windowWidth,
-            out int windowHeight)
+            out string error)
         {
             originX = 0;
             originY = 0;
             dpiScaleX = 1.0f;
             dpiScaleY = 1.0f;
-            windowWidth = 0;
-            windowHeight = 0;
             status = ScreenCaptureStatus.NotFound;
             error = "Target window was not found.";
 
@@ -320,10 +282,7 @@ namespace MahmoudAI.WindowsIntegration.Automation
                 return false;
             }
 
-            windowWidth = bounds.right - bounds.left;
-            windowHeight = bounds.bottom - bounds.top;
-
-            if (windowWidth <= 0 || windowHeight <= 0)
+            if (bounds.right <= bounds.left || bounds.bottom <= bounds.top)
             {
                 status = ScreenCaptureStatus.NotFound;
                 error = "Target window has no visible bounds.";
@@ -409,34 +368,18 @@ namespace MahmoudAI.WindowsIntegration.Automation
         {
             if (Interlocked.Exchange(ref _disposed, 1) == 0)
             {
-                // Device is shared CanvasDevice, disposed elsewhere or managed by Win2D
+                // Device is shared CanvasDevice
             }
         }
 
         private void ThrowIfDisposed()
         {
-            ObjectDisposedException.ThrowIf(_disposed == 1, this);
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
         }
 
         private static CapturedScreenFrame Failure(ScreenCaptureStatus status, string error)
         {
-            return new CapturedScreenFrame(
-                status,
-                new ScreenFrameMetadata(
-                    string.Empty,
-                    DateTimeOffset.UtcNow,
-                    0,
-                    0,
-                    0,
-                    1.0f,
-                    1.0f,
-                    0,
-                    0,
-                    0,
-                    IntPtr.Zero),
-                Array.Empty<byte>(),
-                null,
-                error);
+            return new CapturedScreenFrame(status, null, null, null, error);
         }
     }
 }
