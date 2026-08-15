@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Dispatching;
 
 namespace MahmoudAI.WindowsIntegration.TestHost;
 
